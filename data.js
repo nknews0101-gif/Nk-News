@@ -263,12 +263,12 @@ const NKData = {
       const localHash = localStorage.getItem('nk_articles');
       const cloudHash = JSON.stringify(cloudArticles);
       
-      // If cloud has different data than local, overwrite local and trigger a silent UI refresh (reload) if not an admin doing edits
+      // If cloud has different data than local, overwrite local and trigger a silent UI refresh
       if (localHash !== cloudHash && cloudArticles.length > 0) {
         console.log('☁️ Supabase Sync: Updating local database with fresh cloud data...');
         localStorage.setItem('nk_articles', cloudHash);
         if (!window.location.pathname.includes('admin.html')) {
-           window.location.reload(); // Instantly apply live changes for readers
+           document.dispatchEvent(new CustomEvent('nk-data-updated'));
         }
       }
     } catch(e) {

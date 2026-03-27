@@ -1,5 +1,7 @@
 require('dotenv').config();
 const { XMLParser } = require('fast-xml-parser');
+const { JSDOM } = require('jsdom');
+const { Readability } = require('@mozilla/readability');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
@@ -45,10 +47,39 @@ async function fetchCategoryFeeds() {
         const publishedAt = new Date(item.pubDate || new Date()).getTime();
         
         let titleEn = item.title || '';
-        // Google News sometimes throws the source at the end like " - Times of India"
         titleEn = titleEn.split(' - ').slice(0, -1).join(' - ') || titleEn;
         
-        const decodedDesc = (item.description || '').replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
+        let decodedDesc = (item.description || '').replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
+        let fullHtmlBodyEn = `<p>${decodedDesc}</p>`;
+        let finalImageSrc = null;
+
+        // --- FULL TEXT SCRAPING (JSDOM + Readability) ---
+        try {
+            console.log(`  -> Scraping full article: ${item.link}`);
+            // Fetch source HTML with a fake user agent to bypass basic blocks
+            const htmlRes = await fetch(item.link, {
+              headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+            });
+            const htmlText = await htmlRes.text();
+            
+            // JSDOM Parsing
+            const doc = new JSDOM(htmlText, { url: item.link });
+            const reader = new Readability(doc.window.document);
+            const articleData = reader.parse();
+            
+            if (articleData && articleData.content) {
+                // Use Readability's clean, reading-mode HTML
+                fullHtmlBodyEn = articleData.content;
+                // Excerpt can be taken directly from the parsed text content
+                decodedDesc = (articleData.excerpt || articleData.textContent.substring(0, 160)).trim() + '...';
+                
+                // Get the best native image
+                const ogImage = doc.window.document.querySelector('meta[property="og:image"]')?.content;
+                finalImageSrc = ogImage || articleData.leadImageUrl;
+            }
+        } catch (scrapeErr) {
+            console.log(`  -> Scrape failed, falling back to RSS excerpt:`, scrapeErr.message);
+        }
         
         // Translate to top UI languages immediately
         const titleHi = await translateText(titleEn, 'hi');
@@ -60,8 +91,8 @@ async function fetchCategoryFeeds() {
         const rawGuid = (typeof item.guid === 'object' ? item.guid['#text'] : item.guid) || item.title;
         const id = 'art-' + Buffer.from(String(rawGuid)).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
         
-        let imgSrc = null;
-        if (item['media:content'] && item['media:content']['@_url']) {
+        let imgSrc = finalImageSrc;
+        if (!imgSrc && item['media:content'] && item['media:content']['@_url']) {
             imgSrc = item['media:content']['@_url'];
         } else if (item.description) {
             const imgMatch = item.description.match(/<img[^>]+src="([^">]+)"/);
@@ -86,7 +117,7 @@ async function fetchCategoryFeeds() {
           id,
           title: { en: await translateText(titleEn, 'en'), hi: titleHi, bn: titleBn },
           excerpt: { en: excerptEn, hi: excerptHi, bn: excerptBn },
-          body: { en: `<p>${excerptEn}</p><br><p><strong>Source / <i>स्रोत</i></strong>: <a href="${item.link}" target="_blank" style="color:red; font-weight:600;">Read Full Report ↗</a></p>` },
+          body: { en: `${fullHtmlBodyEn}<br><p><strong>Source / <i>स्रोत</i></strong>: <a href="${item.link}" target="_blank" style="color:red; font-weight:600;">Read Full Report ↗</a></p>` },
           category: feed.category,
           author: 'Auto News Matrix',
           status: 'published',

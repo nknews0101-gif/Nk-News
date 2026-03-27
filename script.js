@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Initialize Data Layer ──
   NKData.init();
 
+  // Listen for background cloud sync updates for seamless re-rendering
+  document.addEventListener('nk-data-updated', () => {
+    console.log('Background Sync Received: Silently rendering new UI');
+    renderPage();
+  });
+
   // ═════════════════════════════════
   //  RENDER ALL DYNAMIC CONTENT
   // ═════════════════════════════════
@@ -20,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderVideos();
     applyTranslations();
   }
+
+  // Initial Boot Render
+  renderPage();
 
   // ── TICKER ──
   function renderTicker() {
