@@ -17,55 +17,76 @@
 </head>
 <body>
 
-<!-- ═══════════ HEADER ═══════════ -->
-<header class="header" id="header">
-          <div class="lang-option" data-lang="bn"><span class="native">Bengali</span><span class="code">/bn/</span></div>
-          <div class="lang-option" data-lang="te"><span class="native">Telugu</span><span class="code">/te/</span></div>
-          <div class="lang-option" data-lang="mr"><span class="native">Marathi</span><span class="code">/mr/</span></div>
-          <div class="lang-option" data-lang="ta"><span class="native">Tamil</span><span class="code">/ta/</span></div>
-          <div class="lang-option" data-lang="ur"><span class="native">Urdu</span><span class="code">/ur/</span></div>
-          <div class="lang-option" data-lang="gu"><span class="native">Gujarati</span><span class="code">/gu/</span></div>
-          <div class="lang-option" data-lang="kn"><span class="native">Kannada</span><span class="code">/kn/</span></div>
-          <div class="lang-option" data-lang="ml"><span class="native">Malayalam</span><span class="code">/ml/</span></div>
-          <div class="lang-option" data-lang="or"><span class="native">Odia</span><span class="code">/or/</span></div>
-          <div class="lang-option" data-lang="pa"><span class="native">Punjabi</span><span class="code">/pa/</span></div>
-          <div class="lang-option" data-lang="as"><span class="native">Assamese</span><span class="code">/as/</span></div>
-          <div class="lang-option" data-lang="mai"><span class="native">Maithili</span><span class="code">/mai/</span></div>
-          <div class="lang-option" data-lang="sat"><span class="native">Santali</span><span class="code">/sat/</span></div>
-          <div class="lang-option" data-lang="ks"><span class="native">Kashmiri</span><span class="code">/ks/</span></div>
-          <div class="lang-option" data-lang="ne"><span class="native">Nepali</span><span class="code">/ne/</span></div>
-          <div class="lang-option" data-lang="sd"><span class="native">Sindhi</span><span class="code">/sd/</span></div>
-          <div class="lang-option" data-lang="gom"><span class="native">Konkani</span><span class="code">/gom/</span></div>
-          <div class="lang-option" data-lang="doi"><span class="native">Dogri</span><span class="code">/doi/</span></div>
-          <div class="lang-option" data-lang="mni"><span class="native">Manipuri</span><span class="code">/mni/</span></div>
-          <div class="lang-option" data-lang="brx"><span class="native">Bodo</span><span class="code">/brx/</span></div>
-          <div class="lang-option" data-lang="sa"><span class="native">Sanskrit</span><span class="code">/sa/</span></div>
+<!-- ═══════════ TOP BAR ═══════════ -->
+<section id="top" class="pt-2 pb-2 bg_light border-bottom">
+  <div class="container-xl">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <ul class="font_12 d-flex mb-0 fw-bold list-unstyled">
+          <li><a class="col_orange" href="index.html">Home</a></li>
+          <li class="ms-3 text-muted" id="headerDate">Loading...</li>
+        </ul>
+      </div>
+      <div class="col-md-5">
+        <div class="top_1_right text-end">
+          <ul class="mb-0 d-flex justify-content-end list-unstyled social_brands">
+            <li><a class="bg_orange d-inline-block text-white text-center" href="#"><i class="bi bi-facebook"></i></a></li>
+            <li class="ms-1"><a class="bg-info d-inline-block text-white text-center" href="#"><i class="bi bi-twitter"></i></a></li>
+            <li class="ms-1"><a class="bg-danger d-inline-block text-white text-center" href="#"><i class="bi bi-instagram"></i></a></li>
+          </ul>
         </div>
       </div>
-      <button class="header-btn" id="searchBtn" title="Search">🔍</button>
-      <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
-      <a href="admin.html" class="header-btn" title="Admin Panel" style="text-decoration:none;">⚙️</a>
-      <button class="hamburger" id="hamburgerBtn" title="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
-</header>
+</section>
 
-<!-- ═══════════ CATEGORY NAV ═══════════ -->
-<nav class="category-nav" id="categoryNav">
-  <div class="category-nav-inner">
-    <a href="index.html" class="active" data-i18n="home">Home</a>
-    <a href="category.html?cat=politics" data-i18n="politics">Politics</a>
-    <a href="category.html?cat=business" data-i18n="business">Business</a>
-    <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
-    <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
-    <a href="category.html?cat=world" data-i18n="world">World</a>
-    <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
-    <a href="category.html?cat=uttar-pradesh" data-i18n="uttar-pradesh">Uttar Pradesh</a>
-    <a href="category.html?cat=gorakhpur" data-i18n="gorakhpur">Gorakhpur</a>
-    <a href="category.html?cat=opinion" data-i18n="opinion">Opinion</a>
-    <a href="#videos" data-i18n="videos">Videos</a>
+<!-- ═══════════ TOP HEAD (BRAND) ═══════════ -->
+<section id="top_head" class="pt-3 pb-3">
+  <div class="container-xl">
+    <div class="row align-items-center">
+      <div class="col text-center">
+        <a href="index.html" class="text-decoration-none">
+          <b class="text-uppercase fs-1 lh-1 d-block brand-text">
+            <i class="bi bi-newspaper me-1 col_orange"></i>
+            NK <span class="col_orange">News</span>
+          </b>
+        </a>
+        <span class="font_12 text-muted uppercase bold mt-2 d-block">India's AI-Powered Independent News Network</span>
+      </div>
+    </div>
   </div>
-</nav>
+</section>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<section id="header" class="sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg_orange w-100 p-0 shadow-sm">
+    <div class="container-xl">
+      <a class="navbar-brand d-lg-none py-2" href="index.html">NK NEWS</a>
+      <button class="navbar-toggler py-2" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navContent" style="background-color: var(--orange);">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link py-3 px-4 active" href="index.html"><i class="bi bi-house"></i></a></li>
+          <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=politics" data-i18n="politics">Politics</a></li>
+          <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=business" data-i18n="business">Business</a></li>
+          <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=technology" data-i18n="technology">Tech</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+          <button id="themeBtn" class="btn btn-outline-light border-0"><i class="bi bi-moon-stars"></i></button>
+          <div class="dropdown" id="langSwitcher">
+            <button id="langBtn" class="btn btn-dark btn-sm rounded px-3 dropdown-toggle" data-bs-toggle="dropdown">
+              <span>English</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end shadow p-2" id="langDropdown">
+              <!-- Options injected by script.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</section>
 
 <!-- ═══════════ BREAKING TICKER ═══════════ -->
 <div class="ticker" id="ticker">
