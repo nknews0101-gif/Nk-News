@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Article — NK News</title>
+  <meta name="description" content="Read the full article on NK News"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- HEADER (same as index) -->
+<header class="header" id="header">
+  <div class="header-top">
+    <div style="display:flex; align-items:center;">
+      <a href="index.html" class="header-logo">NK<span>News</span></a>
+      <span class="header-datetime" id="headerDate"></span>
+    </div>
+    <div class="header-actions">
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang-switcher-btn" id="langBtn"><span>English</span><span class="arrow">▾</span></button>
+        <div class="lang-dropdown" id="langDropdown" style="max-height:400px; overflow-y:auto;">
+          <div class="lang-option active" data-lang="en"><span class="native">English</span><span class="code">/en/</span></div>
+          <div class="lang-option" data-lang="hi"><span class="native">Hindi</span><span class="code">/hi/</span></div>
+          <div class="lang-option" data-lang="bn"><span class="native">Bengali</span><span class="code">/bn/</span></div>
+          <div class="lang-option" data-lang="te"><span class="native">Telugu</span><span class="code">/te/</span></div>
+          <div class="lang-option" data-lang="mr"><span class="native">Marathi</span><span class="code">/mr/</span></div>
+          <div class="lang-option" data-lang="ta"><span class="native">Tamil</span><span class="code">/ta/</span></div>
+          <div class="lang-option" data-lang="ur"><span class="native">Urdu</span><span class="code">/ur/</span></div>
+          <div class="lang-option" data-lang="gu"><span class="native">Gujarati</span><span class="code">/gu/</span></div>
+          <div class="lang-option" data-lang="kn"><span class="native">Kannada</span><span class="code">/kn/</span></div>
+          <div class="lang-option" data-lang="ml"><span class="native">Malayalam</span><span class="code">/ml/</span></div>
+          <div class="lang-option" data-lang="or"><span class="native">Odia</span><span class="code">/or/</span></div>
+          <div class="lang-option" data-lang="pa"><span class="native">Punjabi</span><span class="code">/pa/</span></div>
+          <div class="lang-option" data-lang="as"><span class="native">Assamese</span><span class="code">/as/</span></div>
+          <div class="lang-option" data-lang="mai"><span class="native">Maithili</span><span class="code">/mai/</span></div>
+          <div class="lang-option" data-lang="sat"><span class="native">Santali</span><span class="code">/sat/</span></div>
+          <div class="lang-option" data-lang="ks"><span class="native">Kashmiri</span><span class="code">/ks/</span></div>
+          <div class="lang-option" data-lang="ne"><span class="native">Nepali</span><span class="code">/ne/</span></div>
+          <div class="lang-option" data-lang="sd"><span class="native">Sindhi</span><span class="code">/sd/</span></div>
+          <div class="lang-option" data-lang="gom"><span class="native">Konkani</span><span class="code">/gom/</span></div>
+          <div class="lang-option" data-lang="doi"><span class="native">Dogri</span><span class="code">/doi/</span></div>
+          <div class="lang-option" data-lang="mni"><span class="native">Manipuri</span><span class="code">/mni/</span></div>
+          <div class="lang-option" data-lang="brx"><span class="native">Bodo</span><span class="code">/brx/</span></div>
+          <div class="lang-option" data-lang="sa"><span class="native">Sanskrit</span><span class="code">/sa/</span></div>
+        </div>
+      </div>
+      <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- Category Nav -->
+<nav class="category-nav" id="categoryNav">
+  <div class="category-nav-inner">
+    <a href="index.html">Home</a>
+    <a href="category.html?cat=politics" data-i18n="politics">Politics</a>
+    <a href="category.html?cat=business" data-i18n="business">Business</a>
+    <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
+    <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
+    <a href="category.html?cat=world" data-i18n="world">World</a>
+    <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
+  </div>
+</nav>
+
+<!-- ARTICLE CONTENT -->
+<article class="article-page">
+  <div class="container" style="max-width:860px;">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" id="breadcrumb">
+      <a href="index.html">Home</a> / <a href="#" id="breadCat">Category</a> / <span id="breadTitle">Article</span>
+    </nav>
+
+    <div id="articleContent">
+      <p style="text-align:center; padding:80px 0; color:var(--ink3);">Loading article...</p>
+    </div>
+  </div>
+</article>
+
+<!-- Related Articles -->
+<section style="padding-bottom: 48px;">
+  <div class="container" style="max-width:860px;">
+    <div class="section-header">
+      <h2 class="section-title"><span class="accent"></span><span data-i18n="more_in_category">More in this Category</span></h2>
+    </div>
+    <div class="news-grid" id="relatedArticles" style="grid-template-columns: repeat(3, 1fr);"></div>
+  </div>
+</section>
+
+<!-- Footer (compact) -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 NK News Media Pvt. Ltd. All rights reserved.</span>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="admin.html">Admin</a>
+        <a href="grievance.html">Grievance</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ── Common: Date, Theme, Lang ──
+  const headerDate = document.getElementById('headerDate');
+  function updateDate() {
+    headerDate.textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZone:'Asia/Kolkata' }) + ' IST';
+  }
+  updateDate();
+
+  // Theme
+  const themeBtn = document.getElementById('themeBtn');
+  if (localStorage.getItem('nk_theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeBtn.textContent = '☀️';
+  }
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.toggleAttribute('data-theme');
+    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('nk_theme','light'); themeBtn.textContent='🌙'; }
+    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('nk_theme','dark'); themeBtn.textContent='☀️'; }
+  });
+
+  // Language switcher
+  const langSwitcher = document.getElementById('langSwitcher');
+  const langBtn = document.getElementById('langBtn');
+  langBtn.addEventListener('click', (e) => { e.stopPropagation(); langSwitcher.classList.toggle('open'); });
+  document.addEventListener('click', () => langSwitcher.classList.remove('open'));
+
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.addEventListener('click', async () => {
+      const lang = opt.dataset.lang;
+      localStorage.setItem('nk_lang', lang);
+      document.cookie = `nk_lang=${lang}; max-age=31536000; path=/`;
+      if (lang === 'ur' || lang === 'ks') document.documentElement.setAttribute('dir','rtl');
+      else document.documentElement.removeAttribute('dir');
+      langBtn.querySelector('span:first-child').textContent = opt.querySelector('.native').textContent;
+      document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      langSwitcher.classList.remove('open');
+      
+      await NKData.translateMissingContent(lang);
+
+      loadArticle(); // Reload in new language
+      applyTranslations();
+    });
+  });
+
+  // Restore saved lang
+  const savedLang = localStorage.getItem('nk_lang');
+  if (savedLang) {
+    const opt = document.querySelector(`[data-lang="${savedLang}"]`);
+    if (opt) {
+      langBtn.querySelector('span:first-child').textContent = opt.querySelector('.native').textContent;
+      document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+    }
+  }
+
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = NKData.t(el.dataset.i18n);
+    });
+  }
+
+  // ── Load Article ──
+  function loadArticle() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) {
+      document.getElementById('articleContent').innerHTML = '<p style="text-align:center; padding:80px 0; color:var(--ink3);">Article not found. <a href="index.html">Go Home</a></p>';
+      return;
+    }
+
+    const article = NKData.getArticleById(id);
+    if (!article) {
+      document.getElementById('articleContent').innerHTML = '<p style="text-align:center; padding:80px 0; color:var(--ink3);">Article not found. <a href="index.html">Go Home</a></p>';
+      return;
+    }
+
+    const cat = NKData.getCategoryInfo(article.category);
+    const title = NKData.localText(article.title);
+    const body = NKData.localText(article.body);
+    const excerpt = NKData.localText(article.excerpt);
+
+    document.title = title + ' — NK News';
+
+    // Breadcrumb
+    const breadCat = document.getElementById('breadCat');
+    const breadTitle = document.getElementById('breadTitle');
+    if(breadCat) { breadCat.textContent = NKData.t(article.category); breadCat.href = `category.html?cat=${article.category}`; }
+    if(breadTitle) { breadTitle.textContent = title.substring(0, 50) + '...'; }
+
+    // Highlight active nav
+    document.querySelectorAll('.category-nav a').forEach(a => {
+      a.classList.remove('active');
+      if (a.href.includes(`cat=${article.category}`)) a.classList.add('active');
+    });
+
+    const colorClass = NKData.getCatColorClass(article.category);
+    const typeMap = { article: '', video: '▶️ Video', photo_story: '📸 Photo Story', live: '🔴 Live', opinion: '✍️ Opinion' };
+    const contentTypeBadge = typeMap[article.contentType] ? `<span class="content-type-badge content-type-badge--${article.contentType}" style="margin-left:8px;">${typeMap[article.contentType]}</span>` : '';
+
+    const bgImage = article.images && article.images[0] ? `<img src="${article.images[0]}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;" />` : `<div class="hero-image-placeholder">Article Hero Image · ${cat.en}</div>`;
+
+    let galleryHtml = '';
+    if (article.images && article.images.length > 1) {
+      galleryHtml = `
+        <div class="story-gallery" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-top:32px;">
+          ${article.images.slice(1).map(src => `<img src="${src}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; border:1px solid var(--border);" />`).join('')}
+        </div>
+      `;
+    }
+
+    const contentBox = document.getElementById('articleContent');
+    if(contentBox) {
+      contentBox.innerHTML = `
+        <div class="hero-image" style="margin-bottom:24px; position:relative; overflow:hidden;">
+          ${bgImage}
+        </div>
+        <span class="cat-tag ${colorClass}">${NKData.t(article.category)}</span>
+        ${contentTypeBadge}
+        <h1 class="hero-headline" style="margin:16px 0 12px; font-size:36px;">${title}</h1>
+        <div class="hero-meta" style="margin-bottom:24px;">
+          <span class="author">${NKData.t('by')} ${article.author}</span>
+          <span class="dot"></span>
+          <span>${NKData.timeAgo(article.publishedAt)}</span>
+          <span class="dot"></span>
+          <span>${Math.ceil((body||'').length / 200)} ${NKData.t('min_read')}</span>
+          <span class="dot"></span>
+          <span>${(article.views || 0).toLocaleString()} ${NKData.t('views')}</span>
+        </div>
+        <div style="font-size:16px; line-height:1.8; color:var(--ink2);">
+          <p style="font-size:18px; font-weight:500; margin-bottom:16px; color:var(--ink);">${excerpt}</p>
+          <div>${body}</div>
+        </div>
+        ${galleryHtml}
+        ${article.tags && article.tags.length ? `<div class="analysis-tags" style="margin-top:32px;">${article.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      `;
+    }
+
+    // Related articles
+    const related = NKData.getArticlesByCategory(article.category).filter(a => a.id !== id).slice(0, 3);
+    const relatedHtml = related.map(a => {
+      const t = NKData.localText(a.title);
+      const catInfo = NKData.getCategoryInfo(a.category);
+      return `
+        <article class="news-card">
+          <div class="news-card-image"><div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en}</div></div>
+          <div class="news-card-body">
+            <span class="cat-tag ${NKData.getCatColorClass(a.category)}" style="font-size:9px; padding:2px 6px;">${NKData.t(a.category)}</span>
+            <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${t}</a></h3>
+            <div class="news-card-meta"><span>${NKData.timeAgo(a.publishedAt)}</span><span>${(a.views||0).toLocaleString()} ${NKData.t('views')}</span></div>
+          </div>
+        </article>
+      `;
+    }).join('');
+    document.getElementById('relatedArticles').innerHTML = relatedHtml || '<p style="color:var(--ink3);">No related articles found.</p>';
+  }
+
+  loadArticle();
+  applyTranslations();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NK News — India's Multilingual News Portal</title>
+  <meta name="description" content="NK News delivers breaking news, in-depth analysis, and real-time coverage in English and 22 Indian languages."/>
+  <meta name="keywords" content="NK News, India news, breaking news, Hindi news, multilingual news"/>
+  <meta property="og:title" content="NK News — India's Multilingual News Portal"/>
+  <meta property="og:description" content="Breaking news, deep analysis, 22 Indian languages."/>
+  <meta property="og:type" content="website"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="header" id="header">
+  <div class="header-top">
+    <div style="display:flex; align-items:center;">
+      <a href="index.html" class="header-logo">NK<span>News</span></a>
+      <span class="header-datetime" id="headerDate"></span>
+    </div>
+    <div class="header-actions">
+      <!-- Language Switcher -->
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang-switcher-btn" id="langBtn"><span>English</span><span class="arrow">▾</span></button>
+        <div class="lang-dropdown" id="langDropdown" style="max-height:400px; overflow-y:auto;">
+          <div class="lang-option active" data-lang="en"><span class="native">English</span><span class="code">/en/</span></div>
+          <div class="lang-option" data-lang="hi"><span class="native">Hindi</span><span class="code">/hi/</span></div>
+          <div class="lang-option" data-lang="bn"><span class="native">Bengali</span><span class="code">/bn/</span></div>
+          <div class="lang-option" data-lang="te"><span class="native">Telugu</span><span class="code">/te/</span></div>
+          <div class="lang-option" data-lang="mr"><span class="native">Marathi</span><span class="code">/mr/</span></div>
+          <div class="lang-option" data-lang="ta"><span class="native">Tamil</span><span class="code">/ta/</span></div>
+          <div class="lang-option" data-lang="ur"><span class="native">Urdu</span><span class="code">/ur/</span></div>
+          <div class="lang-option" data-lang="gu"><span class="native">Gujarati</span><span class="code">/gu/</span></div>
+          <div class="lang-option" data-lang="kn"><span class="native">Kannada</span><span class="code">/kn/</span></div>
+          <div class="lang-option" data-lang="ml"><span class="native">Malayalam</span><span class="code">/ml/</span></div>
+          <div class="lang-option" data-lang="or"><span class="native">Odia</span><span class="code">/or/</span></div>
+          <div class="lang-option" data-lang="pa"><span class="native">Punjabi</span><span class="code">/pa/</span></div>
+          <div class="lang-option" data-lang="as"><span class="native">Assamese</span><span class="code">/as/</span></div>
+          <div class="lang-option" data-lang="mai"><span class="native">Maithili</span><span class="code">/mai/</span></div>
+          <div class="lang-option" data-lang="sat"><span class="native">Santali</span><span class="code">/sat/</span></div>
+          <div class="lang-option" data-lang="ks"><span class="native">Kashmiri</span><span class="code">/ks/</span></div>
+          <div class="lang-option" data-lang="ne"><span class="native">Nepali</span><span class="code">/ne/</span></div>
+          <div class="lang-option" data-lang="sd"><span class="native">Sindhi</span><span class="code">/sd/</span></div>
+          <div class="lang-option" data-lang="gom"><span class="native">Konkani</span><span class="code">/gom/</span></div>
+          <div class="lang-option" data-lang="doi"><span class="native">Dogri</span><span class="code">/doi/</span></div>
+          <div class="lang-option" data-lang="mni"><span class="native">Manipuri</span><span class="code">/mni/</span></div>
+          <div class="lang-option" data-lang="brx"><span class="native">Bodo</span><span class="code">/brx/</span></div>
+          <div class="lang-option" data-lang="sa"><span class="native">Sanskrit</span><span class="code">/sa/</span></div>
+        </div>
+      </div>
+      <button class="header-btn" id="searchBtn" title="Search">🔍</button>
+      <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
+      <a href="admin.html" class="header-btn" title="Admin Panel" style="text-decoration:none;">⚙️</a>
+      <button class="hamburger" id="hamburgerBtn" title="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ CATEGORY NAV ═══════════ -->
+<nav class="category-nav" id="categoryNav">
+  <div class="category-nav-inner">
+    <a href="category.html?cat=politics" class="active" data-i18n="politics">Politics</a>
+    <a href="category.html?cat=business" data-i18n="business">Business</a>
+    <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
+    <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
+    <a href="category.html?cat=world" data-i18n="world">World</a>
+    <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
+    <a href="category.html?cat=opinion" data-i18n="opinion">Opinion</a>
+    <a href="#videos" data-i18n="videos">Videos</a>
+  </div>
+</nav>
+
+<!-- ═══════════ BREAKING TICKER ═══════════ -->
+<div class="ticker" id="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label"><span class="ticker-pulse"></span><span data-i18n="breaking">BREAKING</span></div>
+    <div class="ticker-track">
+      <div class="ticker-content" id="tickerContent"><!-- JS fills --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ HERO SECTION ═══════════ -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-grid">
+      <article class="hero-main" id="heroMain"><!-- JS fills --></article>
+      <aside class="hero-sidebar" id="heroSidebar"><!-- JS fills --></aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DYNAMIC CATEGORY SECTIONS ═══════════ -->
+<div id="categorySections"><!-- JS fills --></div>
+
+<!-- ═══════════ DEEP ANALYSIS + TRENDING ═══════════ -->
+<section>
+  <div class="container">
+    <div class="content-layout">
+      <div class="content-main">
+        <div class="section-header" style="margin-bottom:16px;">
+          <h2 class="section-title"><span class="accent"></span><span data-i18n="in_depth">In-Depth Analysis</span></h2>
+        </div>
+        <div id="analysisBlock"><!-- JS fills --></div>
+      </div>
+      <aside>
+        <div class="trending-section">
+          <div class="section-header" style="border-bottom-width:1px;">
+            <h2 class="section-title" style="font-size:18px;"><span class="accent"></span><span data-i18n="most_read">Most Read</span></h2>
+          </div>
+          <div class="trending-list" id="trendingList"><!-- JS fills --></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VIDEO GALLERY ═══════════ -->
+<section class="video-gallery" id="videos">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title"><span class="accent"></span><span data-i18n="video_gallery">Video Gallery</span></h2>
+      <a href="#" class="section-more" data-i18n="view_all">View All →</a>
+    </div>
+    <div class="video-grid" id="videoGrid"><!-- JS fills --></div>
+  </div>
+</section>
+
+<!-- ═══════════ NEWSLETTER ═══════════ -->
+<section>
+  <div class="container">
+    <div class="newsletter">
+      <h2 class="newsletter-title" data-i18n="newsletter_title">Stay Informed. Stay Ahead.</h2>
+      <p class="newsletter-desc" data-i18n="newsletter_desc">Get NK News delivered to your inbox — breaking headlines, deep analysis, and exclusive stories in your preferred language.</p>
+      <form class="newsletter-form" onsubmit="return false;">
+        <input type="email" class="newsletter-input" data-i18n-placeholder="your_email" placeholder="Your email address" required/>
+        <button type="submit" class="newsletter-submit" data-i18n="subscribe">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">NK<span>News</span></div>
+        <p class="footer-desc">India's most advanced multilingual news platform. Breaking news, investigative journalism, and real-time coverage in English and 22 official Indian languages.</p>
+        <div class="footer-social">
+          <a href="#" title="Twitter/X">𝕏</a>
+          <a href="#" title="YouTube">▶</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Facebook">f</a>
+          <a href="#" title="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="categories">Categories</h4>
+        <a href="category.html?cat=politics" data-i18n="politics">Politics</a>
+        <a href="category.html?cat=business" data-i18n="business">Business</a>
+        <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
+        <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
+        <a href="category.html?cat=world" data-i18n="world">World</a>
+        <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="company">Company</h4>
+        <a href="#" data-i18n="about">About NK News</a>
+        <a href="#" data-i18n="careers">Careers</a>
+        <a href="#" data-i18n="ethics">Ethics Policy</a>
+        <a href="#" data-i18n="advertise">Advertise With Us</a>
+        <a href="#" data-i18n="contact">Contact</a>
+        <a href="#" data-i18n="rss">RSS Feeds</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="legal">Legal</h4>
+        <a href="#" data-i18n="privacy">Privacy Policy</a>
+        <a href="#" data-i18n="terms">Terms of Service</a>
+        <a href="#" data-i18n="cookie_policy">Cookie Policy</a>
+        <a href="grievance.html" data-i18n="grievance">Grievance Redressal</a>
+        <a href="#" data-i18n="takedown">Content Takedown</a>
+        <a href="#" data-i18n="dpdp">DPDP Act Compliance</a>
+      </div>
+    </div>
+
+    <!-- MIB Compliance -->
+    <div class="footer-compliance">
+      <div class="compliance-title" data-i18n="mib_title">MIB Publisher Disclosure — IT Rules 2021</div>
+      <div class="compliance-info">
+        <strong>Owner:</strong> NK News Media Private Limited · <strong>Registration No:</strong> DIGICOM/2026/NK-1084 · <strong>Editor:</strong> Naveen Kumar · <strong>Registered Address:</strong> 4th Floor, Digital Media Tower, Sector 62, Noida, UP 201301 · <strong>Grievance Officer:</strong> Amit Verma, <a href="mailto:grievance@nknews.in" style="color:var(--gold);">grievance@nknews.in</a>, Response 24h, Resolution 15 days
+      </div>
+    </div>
+
+    <!-- 22 Language Grid -->
+    <div class="footer-languages">
+      <div class="compliance-title" data-i18n="avail_languages">Available in 22 Languages</div>
+      <div class="footer-lang-grid">
+        <div class="footer-lang-pill"><span class="native">हिंदी</span><span class="code">/hi/</span></div>
+        <div class="footer-lang-pill"><span class="native">English</span><span class="code">/en/</span></div>
+        <div class="footer-lang-pill"><span class="native">मराठी</span><span class="code">/mr/</span></div>
+        <div class="footer-lang-pill"><span class="native">বাংলা</span><span class="code">/bn/</span></div>
+        <div class="footer-lang-pill"><span class="native">தமிழ்</span><span class="code">/ta/</span></div>
+        <div class="footer-lang-pill"><span class="native">తెలుగు</span><span class="code">/te/</span></div>
+        <div class="footer-lang-pill"><span class="native">ಕನ್ನಡ</span><span class="code">/kn/</span></div>
+        <div class="footer-lang-pill"><span class="native">ગુજરાતી</span><span class="code">/gu/</span></div>
+        <div class="footer-lang-pill"><span class="native">ਪੰਜਾਬੀ</span><span class="code">/pa/</span></div>
+        <div class="footer-lang-pill"><span class="native">اردو</span><span class="code">/ur/</span></div>
+        <div class="footer-lang-pill"><span class="native">ଓଡ଼ିଆ</span><span class="code">/or/</span></div>
+        <div class="footer-lang-pill"><span class="native">മലയാളം</span><span class="code">/ml/</span></div>
+        <div class="footer-lang-pill"><span class="native">অসমীয়া</span><span class="code">/as/</span></div>
+        <div class="footer-lang-pill"><span class="native">संस्कृतम्</span><span class="code">/sa/</span></div>
+        <div class="footer-lang-pill"><span class="native">नेपाली</span><span class="code">/ne/</span></div>
+        <div class="footer-lang-pill"><span class="native">सिंधी</span><span class="code">/sd/</span></div>
+        <div class="footer-lang-pill"><span class="native">বড়ো</span><span class="code">/brx/</span></div>
+        <div class="footer-lang-pill"><span class="native">डोगरी</span><span class="code">/doi/</span></div>
+        <div class="footer-lang-pill"><span class="native">कश्मीरी</span><span class="code">/ks/</span></div>
+        <div class="footer-lang-pill"><span class="native">कोंकणी</span><span class="code">/kok/</span></div>
+        <div class="footer-lang-pill"><span class="native">मैथिली</span><span class="code">/mai/</span></div>
+        <div class="footer-lang-pill"><span class="native">মণিপুরী</span><span class="code">/mni/</span></div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 NK News Media Pvt. Ltd. All rights reserved.</span>
+      <div><a href="#">Sitemap</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════ COOKIE CONSENT ═══════════ -->
+<div class="cookie-consent" id="cookieConsent">
+  <div class="cookie-text">
+    <strong>🍪 </strong><span data-i18n="cookie_msg">NK News uses cookies for essential functionality and analytics. We comply with India's Digital Personal Data Protection Act (DPDP) 2023.</span> <a href="#" data-i18n="cookie_privacy">Read our Privacy Policy</a>.
+  </div>
+  <div class="cookie-actions">
+    <button class="cookie-btn cookie-btn--decline" id="cookieDecline" data-i18n="decline">Decline</button>
+    <button class="cookie-btn cookie-btn--accept" id="cookieAccept" data-i18n="accept_all">Accept All</button>
+  </div>
+</div>
+
+<!-- ═══════════ SEARCH OVERLAY ═══════════ -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Search NK News..." autofocus/>
+      <button class="search-close" id="searchClose">ESC</button>
+    </div>
+    <div id="searchResults" style="padding:12px 0;"></div>
+  </div>
+</div>
+
+<!-- ═══════════ MOBILE MENU ═══════════ -->
+<div class="mobile-menu-overlay" id="mobileOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <span class="header-logo" style="font-size:20px; color:var(--ink);">NK<span>News</span></span>
+    <button class="mobile-menu-close" id="mobileClose">✕</button>
+  </div>
+  <nav class="mobile-menu-nav">
+    <a href="category.html?cat=politics" data-i18n="politics">Politics</a>
+    <a href="category.html?cat=business" data-i18n="business">Business</a>
+    <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
+    <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
+    <a href="category.html?cat=world" data-i18n="world">World</a>
+    <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
+    <a href="admin.html">⚙️ Admin Panel</a>
+  </nav>
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

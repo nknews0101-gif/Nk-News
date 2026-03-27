@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NK News — Product Architecture v10</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0f0d0a;
+    --ink2: #3a3530;
+    --ink3: #7a7570;
+    --surface: #faf8f4;
+    --surface2: #f2ede4;
+    --surface3: #e8e0d0;
+    --red: #c8281e;
+    --red-light: #f9eeec;
+    --gold: #b8860b;
+    --gold-light: #fdf6e3;
+    --teal: #0e7c6e;
+    --teal-light: #e8f5f2;
+    --blue: #1a4fa0;
+    --blue-light: #eaf0fb;
+    --purple: #5c3d8f;
+    --purple-light: #f0eafa;
+    --border: #d8d0c0;
+    --radius: 8px;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--ink);
+    color: var(--surface);
+    padding: 80px 60px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 40%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.025) 8px,
+      rgba(255,255,255,0.025) 9px
+    );
+  }
+  .cover-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-family: var(--font-serif);
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    max-width: 640px;
+  }
+  .cover h1 span { color: var(--red); }
+  .cover-sub {
+    font-size: 17px;
+    font-weight: 300;
+    color: rgba(250,248,244,0.7);
+    max-width: 560px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 24px;
+    font-size: 13px;
+    color: rgba(250,248,244,0.5);
+  }
+  .cover-meta strong { color: rgba(250,248,244,0.85); display: block; font-weight: 500; }
+
+  /* ── NAV ── */
+  .toc-nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .toc-nav a {
+    display: block;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .toc-nav a:hover { color: var(--ink); border-bottom-color: var(--red); }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 1040px; margin: 0 auto; padding: 0 60px; }
+
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  h3 {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 28px 0 10px;
+  }
+  h4 {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink2);
+    margin: 20px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  p { margin-bottom: 14px; color: var(--ink2); }
+
+  .lead {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--ink2);
+    margin-bottom: 32px;
+    border-left: 3px solid var(--red);
+    padding-left: 20px;
+  }
+
+  /* ── CARDS & BOXES ── */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { font-size: 13px; margin: 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    margin: 2px;
+    letter-spacing: 0.03em;
+  }
+  .tag-red { background: var(--red-light); color: var(--red); }
+  .tag-gold { background: var(--gold-light); color: var(--gold); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-gray { background: var(--surface2); color: var(--ink2); }
+
+  .callout {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout-red { background: var(--red-light); border-left: 3px solid var(--red); }
+  .callout-teal { background: var(--teal-light); border-left: 3px solid var(--teal); }
+  .callout-gold { background: var(--gold-light); border-left: 3px solid var(--gold); }
+  .callout-blue { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  /* ── FLOW CHART ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 32px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 760px;
+  }
+  .flow-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .flow-box {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+  }
+  .flow-box strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .flow-box span { font-size: 12px; color: var(--ink3); }
+  .flow-arrow {
+    width: 36px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink3);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .flow-connector {
+    width: 2px;
+    height: 24px;
+    background: var(--border);
+    margin: 2px auto;
+  }
+
+  /* ── DB SCHEMA ── */
+  .schema-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 24px;
+    font-family: var(--font-mono);
+  }
+  .schema-table th {
+    background: var(--ink);
+    color: var(--surface);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .schema-table th:first-child { border-radius: 6px 0 0 0; }
+  .schema-table th:last-child { border-radius: 0 6px 0 0; }
+  .schema-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .schema-table tr:nth-child(even) td { background: var(--surface); }
+  .schema-table tr:hover td { background: var(--gold-light); }
+  .pk { color: var(--gold); font-weight: 600; }
+  .fk { color: var(--blue); }
+  .dtype { color: var(--teal); }
+  .constraint { color: var(--red); font-size: 10px; }
+
+  .schema-header {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    padding: 10px 16px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .schema-header .table-name {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .schema-wrap {
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  /* ── TICKER MOCKUP ── */
+  .ticker-mockup {
+    background: var(--red);
+    color: white;
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+    border-radius: var(--radius);
+    margin: 20px 0;
+  }
+  .ticker-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .ticker-label {
+    background: #8b1a13;
+    padding: 6px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .ticker-text {
+    padding: 0 24px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    animation: ticker-scroll 20s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes ticker-scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* ── HERO MOCKUP ── */
+  .hero-mockup {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .hero-nav {
+    background: var(--ink);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+  .hero-logo { color: white; font-family: var(--font-serif); font-size: 16px; font-weight: 700; }
+  .hero-body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+  .hero-main {
+    background: white;
+    padding: 20px;
+  }
+  .hero-main .cat-tag {
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+  }
+  .hero-main h2 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .hero-main .meta { font-size: 11px; color: var(--ink3); }
+  .hero-sidebar {
+    background: white;
+    padding: 16px;
+  }
+  .story-item {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    display: flex;
+    gap: 10px;
+  }
+  .story-item:last-child { border-bottom: none; }
+  .story-thumb {
+    width: 50px; height: 40px;
+    background: var(--surface2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--ink3);
+  }
+  .story-title { font-size: 12px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+
+  /* ── ADMIN STORY ── */
+  .story-step {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .story-step::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 48px;
+    width: 2px;
+    height: calc(100% + 8px);
+    background: var(--border);
+  }
+  .story-step:last-child::before { display: none; }
+  .step-badge {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-content h4 { margin: 8px 0 6px; font-size: 15px; }
+  .step-content p { font-size: 13px; color: var(--ink2); margin: 0; }
+  .step-screen {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--ink2);
+  }
+
+  /* ── BHASHINI FLOW ── */
+  .api-flow {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .api-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .api-step:last-child { margin-bottom: 0; }
+  .api-num {
+    background: var(--teal);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .api-step p { font-size: 13px; margin: 0; color: var(--ink2); }
+  .api-step strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: #1a1714;
+    color: #d0cab8;
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 16px 0;
+  }
+  .kw { color: #c8a86b; }
+  .str { color: #8fc48a; }
+  .cmt { color: #6a6660; font-style: italic; }
+  .fn { color: #7cb9d8; }
+  .num { color: #d4876b; }
+
+  /* ── STACK TABLE ── */
+  .stack-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  .stack-table th {
+    text-align: left;
+    padding: 8px 16px;
+    background: var(--surface2);
+    color: var(--ink2);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border);
+  }
+  .stack-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .stack-table td:first-child { font-weight: 500; color: var(--ink); }
+
+  /* ── LANGUAGE GRID ── */
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .lang-pill {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .lang-pill .native { font-size: 13px; font-weight: 500; color: var(--ink); display: block; }
+  .lang-pill .eng { font-size: 10px; color: var(--ink3); font-family: var(--font-mono); }
+  .lang-pill .url-seg { font-size: 10px; color: var(--teal); font-family: var(--font-mono); }
+
+  /* ── PRIORITY MATRIX ── */
+  .priority-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin: 2px 0;
+  }
+  .priority-row > div {
+    background: white;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  .priority-row > div:first-child {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .priority-header {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  .priority-header > div {
+    background: var(--ink);
+    color: var(--surface);
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── AD SYSTEM ── */
+  .ad-diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 24px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .ad-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .ad-box strong { display: block; font-size: 13px; margin-bottom: 4px; }
+  .ad-arrow { font-size: 24px; color: var(--border); text-align: center; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(250,248,244,0.4);
+    padding: 40px 60px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer strong { color: rgba(250,248,244,0.8); }
+
+  @media (max-width: 768px) {
+    .cover { padding: 48px 24px; }
+    .cover h1 { font-size: 32px; }
+    .page { padding: 0 24px; }
+    .toc-nav { padding: 0 24px; }
+    .hero-body { grid-template-columns: 1fr; }
+    footer { padding: 32px 24px; }
+  }
+
+  @media print {
+    .toc-nav { display: none; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ COVER ═══════════════════ -->
+<div class="cover">
+  <p class="cover-tag">Confidential Product Brief · Version 10 · 2026</p>
+  <h1>NK <span>News</span><br>Architecture</h1>
+  <p class="cover-sub">A world-class, hands-off automated news portal combining investigative depth with live-speed broadcasting — engineered for India's multilingual digital audience.</p>
+  <div class="cover-meta">
+    <div><strong>Role</strong>Lead PM · Full-Stack Architect</div>
+    <div><strong>Stack</strong>Next.js · NestJS · PostgreSQL · Redis</div>
+    <div><strong>Languages</strong>English + 22 Official Indian Languages</div>
+    <div><strong>Version</strong>10.0 · March 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav class="toc-nav">
+  <a href="#flowchart">01 System Flow</a>
+  <a href="#schema">02 Database Schema</a>
+  <a href="#ui-logic">03 UI Components</a>
+  <a href="#admin-story">04 Admin Story</a>
+  <a href="#multilingual">05 Multilingual</a>
+  <a href="#stack">06 Tech Stack</a>
+  <a href="#compliance">07 Compliance</a>
+</nav>
+
+<!-- ═══════════════════ SECTION 1: SYSTEM FLOW ═══════════════════ -->
+<section id="flowchart">
+<div class="page">
+  <p class="section-label">Deliverable 01</p>
+  <h2>System Flow: Admin Click → Frontend Display</h2>
+  <p class="lead">The Automated Layout Engine is the heart of NK News. Once an admin assigns a Priority, zero manual design work is required. The system routes, renders, and distributes the content automatically.</p>
+
+  <!-- PHASE A: INGESTION -->
+  <h3>Phase A — Content Ingestion</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-box">
+        <strong>Admin Opens Universal Editor</strong>
+        <span>Login → CMS Dashboard → "New Post" → Selects Content Type (Article / Video / Photo Story / Live)</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-box">
+        <strong>Content Input &amp; Media Upload</strong>
+        <span>Admin writes in any Indian language. Media (photo/video/PDF) uploaded → stored in S3 bucket. YouTube URL pasted → thumbnail auto-fetched via YouTube API.</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-box">
+        <strong>Auto-Translation Trigger (Bhashini)</strong>
+        <span>Admin clicks "Auto-Translate to All Languages" → NestJS calls Bhashini ULCA API → Translations stored as language_content rows in PostgreSQL. Admin can edit each translation before publish.</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-box">
+        <strong>Priority &amp; Category Assignment</strong>
+        <span>Admin selects: Priority [Breaking / Top Story / Featured / Normal] and Category [Politics / Tech / Sports / Business / Culture / …]. Tags added. Expiry date set (optional).</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-box">
+        <strong>Submit → Backend Validation Pipeline</strong>
+        <span>NestJS validation layer checks: slug uniqueness, required fields, media dimensions, profanity filter (optional), IT Rules 2021 disclosure flag.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE B: PROCESSING -->
+  <h3>Phase B — Media Processing &amp; Storage</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon" style="background:var(--teal-light); color:var(--teal);">📷</div>
+      <h3>Image Pipeline</h3>
+      <p>Sharp.js auto-converts uploads → WebP. Generates 4 responsive sizes (320w, 640w, 960w, 1280w). Stores in S3 with CloudFront CDN. URL saved to DB.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:var(--red-light); color:var(--red);">▶️</div>
+      <h3>Video Pipeline</h3>
+      <p>YouTube URL → YouTube Data API v3 fetches thumbnail, title, duration. For uploaded videos → MediaConvert generates HLS streams. Thumbnail stored in S3.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:var(--gold-light); color:var(--gold);">🔴</div>
+      <h3>Breaking News Pipeline</h3>
+      <p>Priority = Breaking triggers Redis pub/sub → Next.js frontend subscribes via WebSocket → Ticker updates within 2 seconds without page reload. Redis TTL = 72 hours.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:var(--blue-light); color:var(--blue);">🌐</div>
+      <h3>SEO Pipeline</h3>
+      <p>Slug auto-generated (transliterated for Indian languages). Sitemap.xml regenerated. hreflang tags injected for all 22 language variants. OpenGraph metadata written.</p>
+    </div>
+  </div>
+
+  <!-- PHASE C: LAYOUT ROUTING -->
+  <h3>Phase C — Automated Layout Routing Engine</h3>
+  <p>This is the "hands-off" engine. Based solely on <strong>Priority</strong>, the system positions content automatically:</p>
+
+  <div class="priority-header">
+    <div>Priority</div>
+    <div>Frontend Slot Assigned</div>
+    <div>System Action</div>
+  </div>
+  <div style="border:1px solid var(--border); border-top:none; border-radius:0 0 6px 6px; overflow:hidden; margin-bottom:24px;">
+    <div class="priority-row">
+      <div><span class="tag tag-red">Breaking</span></div>
+      <div>Red Ticker Strip + Push Notification</div>
+      <div>Injected into Redis. Frontend ticker auto-scrolls. Mobile push via Firebase.</div>
+    </div>
+    <div class="priority-row">
+      <div><span class="tag tag-gold">Top Story</span></div>
+      <div>Hero Block (full-width, largest image)</div>
+      <div>Displaces previous Top Story. Old Top Story demoted to Featured slot.</div>
+    </div>
+    <div class="priority-row">
+      <div><span class="tag tag-blue">Featured</span></div>
+      <div>3-Column Feature Grid (below hero)</div>
+      <div>Fills up to 3 featured slots. 4th pushes oldest out to Normal grid.</div>
+    </div>
+    <div class="priority-row">
+      <div><span class="tag tag-gray">Normal</span></div>
+      <div>Category Section Grid / List Feed</div>
+      <div>Appended to relevant category section. Sorted by publish date DESC.</div>
+    </div>
+  </div>
+
+  <!-- PHASE D: DELIVERY -->
+  <h3>Phase D — Frontend Delivery</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">6</div>
+      <div class="flow-box">
+        <strong>Next.js ISR (Incremental Static Regeneration)</strong>
+        <span>Homepage regenerates every 60 seconds. Category pages every 120 seconds. Article pages on-demand (revalidate on publish). Served from CloudFront edge.</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">7</div>
+      <div class="flow-box">
+        <strong>Language Detection &amp; Routing</strong>
+        <span>User's Accept-Language header parsed. Cookie preference checked. URL prefix enforced (e.g. /hi/, /ta/, /bn/). Next.js i18n middleware handles redirection.</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">8</div>
+      <div class="flow-box">
+        <strong>Ad Injection (Automated)</strong>
+        <span>AdSense slots in predefined positions. Direct ads: system checks start/expiry dates. Every 3rd paragraph → ad slot injected via React component. CTR data fed back to Ad Manager.</span>
+      </div>
+    </div>
+    <div class="flow-connector"></div>
+    <div class="flow-step">
+      <div class="flow-num">9</div>
+      <div class="flow-box">
+        <strong>Frontend Renders — Zero Admin Design Work</strong>
+        <span>The layout is fully automated. Admin never touches the frontend. Ticker, hero, grid, sidebar, video gallery — all populated dynamically from DB + Redis.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 2: DATABASE SCHEMA ═══════════════════ -->
+<section id="schema">
+<div class="page">
+  <p class="section-label">Deliverable 02</p>
+  <h2>Database Schema</h2>
+  <p class="lead">PostgreSQL relational schema designed for multilingual content, high-performance media serving, ad management, and audit compliance. Redis handles all ephemeral, real-time data.</p>
+
+  <!-- articles -->
+  <div class="schema-header">
+    <span class="tag tag-teal">CORE</span>
+    <span class="table-name">articles</span>
+    <span style="font-size:12px; color:var(--ink3); margin-left:auto;">Master content table</span>
+  </div>
+  <div class="schema-wrap">
+    <table class="schema-table">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="pk">id</td><td class="dtype">UUID</td><td class="constraint">PK, DEFAULT gen_random_uuid()</td><td>Primary key</td></tr>
+      <tr><td>slug</td><td class="dtype">VARCHAR(300)</td><td class="constraint">UNIQUE, NOT NULL</td><td>URL-safe slug (English, transliterated)</td></tr>
+      <tr><td class="fk">author_id</td><td class="dtype">UUID</td><td class="constraint">FK → users.id</td><td>Author reference</td></tr>
+      <tr><td class="fk">category_id</td><td class="dtype">UUID</td><td class="constraint">FK → categories.id</td><td>Primary category</td></tr>
+      <tr><td>priority</td><td class="dtype">ENUM</td><td class="constraint">breaking|top_story|featured|normal</td><td>Layout routing key</td></tr>
+      <tr><td>status</td><td class="dtype">ENUM</td><td class="constraint">draft|review|scheduled|published|archived</td><td>Publish state</td></tr>
+      <tr><td>content_type</td><td class="dtype">ENUM</td><td class="constraint">article|video|photo_story|live|opinion</td><td>Media type</td></tr>
+      <tr><td>hero_image_id</td><td class="dtype">UUID</td><td class="constraint">FK → media.id</td><td>Primary display image</td></tr>
+      <tr><td>published_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">INDEX</td><td>Publish timestamp (supports scheduling)</td></tr>
+      <tr><td>expires_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">NULLABLE</td><td>Auto-archive after expiry</td></tr>
+      <tr><td>view_count</td><td class="dtype">BIGINT</td><td class="constraint">DEFAULT 0</td><td>Incremented via Redis, synced hourly</td></tr>
+      <tr><td>is_premium</td><td class="dtype">BOOLEAN</td><td class="constraint">DEFAULT FALSE</td><td>Paywall flag (future)</td></tr>
+      <tr><td>created_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">DEFAULT NOW()</td><td>Record creation</td></tr>
+      <tr><td>updated_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">AUTO-UPDATE</td><td>Last edit timestamp</td></tr>
+    </table>
+  </div>
+
+  <!-- article_translations -->
+  <div class="schema-header">
+    <span class="tag tag-blue">I18N</span>
+    <span class="table-name">article_translations</span>
+    <span style="font-size:12px; color:var(--ink3); margin-left:auto;">One row per language per article</span>
+  </div>
+  <div class="schema-wrap">
+    <table class="schema-table">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="pk">id</td><td class="dtype">UUID</td><td class="constraint">PK</td><td></td></tr>
+      <tr><td class="fk">article_id</td><td class="dtype">UUID</td><td class="constraint">FK → articles.id, INDEX</td><td>Parent article</td></tr>
+      <tr><td>lang_code</td><td class="dtype">CHAR(5)</td><td class="constraint">e.g. 'hi', 'ta', 'bn'</td><td>ISO 639-1 / BCP 47 code</td></tr>
+      <tr><td>title</td><td class="dtype">TEXT</td><td class="constraint">NOT NULL</td><td>Translated headline</td></tr>
+      <tr><td>slug</td><td class="dtype">VARCHAR(400)</td><td class="constraint">UNIQUE(lang_code, slug)</td><td>Language-specific URL slug</td></tr>
+      <tr><td>summary</td><td class="dtype">TEXT</td><td class="constraint">MAX 300 chars</td><td>SEO meta description</td></tr>
+      <tr><td>body</td><td class="dtype">JSONB</td><td class="constraint">NOT NULL</td><td>Rich-text content (TipTap JSON AST)</td></tr>
+      <tr><td>translation_source</td><td class="dtype">ENUM</td><td class="constraint">manual|bhashini|google</td><td>Translation origin for QA audit</td></tr>
+      <tr><td>is_verified</td><td class="dtype">BOOLEAN</td><td class="constraint">DEFAULT FALSE</td><td>Human-verified translation flag</td></tr>
+      <tr><td>translated_at</td><td class="dtype">TIMESTAMPTZ</td><td></td><td>When translation was created/updated</td></tr>
+    </table>
+  </div>
+
+  <!-- media -->
+  <div class="schema-header">
+    <span class="tag tag-gold">MEDIA</span>
+    <span class="table-name">media</span>
+    <span style="font-size:12px; color:var(--ink3); margin-left:auto;">All assets — images, videos, documents</span>
+  </div>
+  <div class="schema-wrap">
+    <table class="schema-table">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="pk">id</td><td class="dtype">UUID</td><td class="constraint">PK</td><td></td></tr>
+      <tr><td>media_type</td><td class="dtype">ENUM</td><td class="constraint">image|video|youtube|document</td><td>Asset classification</td></tr>
+      <tr><td>original_url</td><td class="dtype">TEXT</td><td class="constraint">NOT NULL</td><td>S3 original path</td></tr>
+      <tr><td>cdn_url_base</td><td class="dtype">TEXT</td><td></td><td>CloudFront base URL</td></tr>
+      <tr><td>webp_url</td><td class="dtype">TEXT</td><td></td><td>Auto-generated WebP path</td></tr>
+      <tr><td>srcset_json</td><td class="dtype">JSONB</td><td></td><td>{"320":"url","640":"url","960":"url","1280":"url"}</td></tr>
+      <tr><td>thumbnail_url</td><td class="dtype">TEXT</td><td></td><td>For video/YouTube thumbnails</td></tr>
+      <tr><td>youtube_id</td><td class="dtype">VARCHAR(20)</td><td class="constraint">NULLABLE</td><td>Extracted YouTube video ID</td></tr>
+      <tr><td>alt_text_json</td><td class="dtype">JSONB</td><td></td><td>{"en":"…","hi":"…","ta":"…"} — multilingual alt text</td></tr>
+      <tr><td>file_size_bytes</td><td class="dtype">BIGINT</td><td></td><td>Original file size</td></tr>
+      <tr><td>dimensions</td><td class="dtype">JSONB</td><td></td><td>{"width":1920,"height":1080}</td></tr>
+    </table>
+  </div>
+
+  <!-- ads -->
+  <div class="schema-header">
+    <span class="tag tag-red">ADS</span>
+    <span class="table-name">advertisements</span>
+    <span style="font-size:12px; color:var(--ink3); margin-left:auto;">Ad Manager — banners, AdSense, scripts</span>
+  </div>
+  <div class="schema-wrap">
+    <table class="schema-table">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="pk">id</td><td class="dtype">UUID</td><td class="constraint">PK</td><td></td></tr>
+      <tr><td>ad_type</td><td class="dtype">ENUM</td><td class="constraint">banner|adsense|video|sponsored_post</td><td>Ad format</td></tr>
+      <tr><td>placement</td><td class="dtype">ENUM</td><td class="constraint">ticker|hero|sidebar|in-article|footer</td><td>Injection slot</td></tr>
+      <tr><td>image_url</td><td class="dtype">TEXT</td><td></td><td>Banner image (CDN)</td></tr>
+      <tr><td>click_url</td><td class="dtype">TEXT</td><td></td><td>Advertiser destination URL</td></tr>
+      <tr><td>ad_code</td><td class="dtype">TEXT</td><td></td><td>Raw AdSense / script code</td></tr>
+      <tr><td>target_languages</td><td class="dtype">TEXT[]</td><td class="constraint">DEFAULT '{}'</td><td>Language targeting (empty = all)</td></tr>
+      <tr><td>target_categories</td><td class="dtype">UUID[]</td><td></td><td>Category targeting</td></tr>
+      <tr><td>starts_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">NOT NULL</td><td>Go-live date</td></tr>
+      <tr><td>ends_at</td><td class="dtype">TIMESTAMPTZ</td><td class="constraint">NULLABLE</td><td>Auto-expire (null = permanent)</td></tr>
+      <tr><td>impressions</td><td class="dtype">BIGINT</td><td class="constraint">DEFAULT 0</td><td>Tracked server-side</td></tr>
+      <tr><td>clicks</td><td class="dtype">BIGINT</td><td class="constraint">DEFAULT 0</td><td>Click counter</td></tr>
+      <tr><td>ctr</td><td class="dtype">DECIMAL(6,4)</td><td class="constraint">GENERATED</td><td>clicks/impressions — auto-computed</td></tr>
+      <tr><td>is_active</td><td class="dtype">BOOLEAN</td><td class="constraint">DEFAULT TRUE</td><td>Manual kill switch</td></tr>
+    </table>
+  </div>
+
+  <!-- Redis Keys -->
+  <h3>Redis Key Structure (Real-time Layer)</h3>
+  <pre><span class="cmt">## Breaking News Ticker</span>
+<span class="kw">LRANGE</span>  breaking:articles  0 9       <span class="cmt"># Top 10 breaking news IDs</span>
+<span class="kw">HSET</span>    article:{id}:quick  title headline_hi published_at
+
+<span class="cmt">## Page View Counters (synced to PG hourly)</span>
+<span class="kw">INCR</span>    pageview:article:{id}
+<span class="kw">EXPIRE</span>  pageview:article:{id}  86400     <span class="cmt"># 24hr window</span>
+
+<span class="cmt">## Trending Articles (sorted set by score)</span>
+<span class="kw">ZADD</span>    trending:24h  {score}  {article_id}
+
+<span class="cmt">## Session Cache for ISR</span>
+<span class="kw">SET</span>     cache:homepage:hi  {json_payload}  EX 60
+<span class="kw">SET</span>     cache:category:{slug}:{lang}  {json}  EX 120
+
+<span class="cmt">## Ad Performance (synced hourly)</span>
+<span class="kw">HINCRBY</span> ad:{id}:stats impressions 1
+<span class="kw">HINCRBY</span> ad:{id}:stats clicks 1</pre>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 3: UI COMPONENT LOGIC ═══════════════════ -->
+<section id="ui-logic">
+<div class="page">
+  <p class="section-label">Deliverable 03</p>
+  <h2>UI Component Logic</h2>
+  <p class="lead">Two signature patterns define the NK News frontend: the Aaj Tak-style live ticker for speed, and the NK News-style deep-analysis block for credibility. Both are automated — zero admin design input required.</p>
+
+  <!-- TICKER -->
+  <h3>Component 1 — The Aaj Tak-Style Breaking News Ticker</h3>
+
+  <div class="ticker-mockup">
+    <div class="ticker-inner">
+      <div class="ticker-label">🔴 BREAKING</div>
+      <div class="ticker-text">PM Modi inaugurates new expressway in UP | India registers 3.2% GDP growth in Q3 | Supreme Court upholds electoral bond ruling | Delhi air quality index drops to 180 | ISRO announces Chandrayaan-4 launch date | Sensex crosses 85,000 mark for first time</div>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <strong>How it works (technical)</strong>
+    Backend: NestJS WebSocket gateway subscribes to Redis channel <code>breaking:new</code>. When admin saves a "Breaking" post, a Redis PUBLISH fires. Gateway broadcasts to all connected Next.js frontend clients via <code>socket.io</code>. React updates ticker state without page reload. Latency target: &lt;2 seconds from Admin Save to user screen.
+  </div>
+
+  <h4>Ticker Logic Rules</h4>
+  <ul style="font-size:13px; color:var(--ink2); padding-left:20px; margin-bottom:20px;">
+    <li style="margin-bottom:6px;">Max 15 items in the ticker at any time. 16th pushes oldest out.</li>
+    <li style="margin-bottom:6px;">Items auto-expire after 72 hours (configurable in Admin).</li>
+    <li style="margin-bottom:6px;">Ticker text is pulled from <code>article_translations.title</code> for the active language — fully multilingual.</li>
+    <li style="margin-bottom:6px;">Click on any ticker item → opens full article in new tab.</li>
+    <li style="margin-bottom:6px;">Admin can manually "pin" an item to keep it in ticker indefinitely.</li>
+    <li>Animation speed: 60px/second (CSS animation). Pauses on hover.</li>
+  </ul>
+
+  <!-- HERO MOCKUP -->
+  <h3>Component 2 — Automated Hero Layout</h3>
+  <div class="hero-mockup">
+    <div class="hero-nav">
+      <span class="hero-logo">NK News</span>
+      <span>Politics</span><span>Business</span><span>Tech</span><span>Sports</span><span>World</span>
+    </div>
+    <div class="hero-body">
+      <div class="hero-main">
+        <span class="cat-tag">Top Story</span>
+        <div style="background:var(--surface2); height:160px; border-radius:4px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--ink3);">Auto-resized WebP hero image (1280w)</div>
+        <h2>India's Digital Economy Surpasses $1 Trillion Milestone Amid AI Investment Surge</h2>
+        <p class="meta">By Priya Sharma · 2 hours ago · 8 min read</p>
+      </div>
+      <div class="hero-sidebar">
+        <p style="font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; font-family:var(--font-mono);">Featured Stories</p>
+        <div class="story-item">
+          <div class="story-thumb">img</div>
+          <div class="story-title">RBI holds repo rate at 6.5% for third consecutive quarter</div>
+        </div>
+        <div class="story-item">
+          <div class="story-thumb">img</div>
+          <div class="story-title">India-UAE trade corridor sees 40% volume surge</div>
+        </div>
+        <div class="story-item">
+          <div class="story-thumb">img</div>
+          <div class="story-title">New EV policy to mandate 30% local components by 2027</div>
+        </div>
+        <div style="background:var(--surface2); border:1px dashed var(--border); border-radius:4px; padding:10px; text-align:center; font-size:11px; color:var(--ink3); margin-top:8px;">📢 Ad Slot — Sidebar 300×250<br>Auto-injected from Ad Manager</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>Hero Auto-Population Logic (Next.js getStaticProps)</strong>
+    Queries PostgreSQL: <code>WHERE priority='top_story' AND status='published' ORDER BY published_at DESC LIMIT 1</code>. Featured sidebar: <code>WHERE priority='featured' LIMIT 3</code>. If fewer than 3 featured exist, fills remaining slots from <code>priority='normal'</code> ordered by view_count DESC. Zero manual intervention.
+  </div>
+
+  <!-- NK NEWS DEEP ANALYSIS -->
+  <h3>Component 3 — NK News-Style Deep Analysis Block</h3>
+  <p>For long-form investigative content, the system auto-detects articles tagged "Analysis" or "Investigation" and renders them with a special deep-reading layout:</p>
+
+  <div class="card" style="border-left:4px solid var(--ink);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+      <span class="tag tag-gray" style="background:var(--ink);color:white; font-size:10px;">IN-DEPTH</span>
+      <span style="font-size:12px; color:var(--ink3);">15 min read · Verified Sources · Updated 3h ago</span>
+    </div>
+    <h3 style="font-family:var(--font-serif); font-size:20px; margin-bottom:8px;">The Architecture of India's New Surveillance Framework: What IT Rules 2021 Mean for Press Freedom</h3>
+    <p style="font-size:13px; color:var(--ink2); margin-bottom:16px;">An investigative breakdown of the new digital intermediary regulations, their enforcement mechanisms, and what independent journalists need to know.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+      <div style="background:var(--surface2); border-radius:6px; padding:10px; text-align:center; font-size:12px;">
+        <strong style="display:block; font-size:18px; font-family:var(--font-serif);">12</strong>
+        Primary Sources
+      </div>
+      <div style="background:var(--surface2); border-radius:6px; padding:10px; text-align:center; font-size:12px;">
+        <strong style="display:block; font-size:18px; font-family:var(--font-serif);">4</strong>
+        Govt Documents
+      </div>
+      <div style="background:var(--surface2); border-radius:6px; padding:10px; text-align:center; font-size:12px;">
+        <strong style="display:block; font-size:18px; font-family:var(--font-serif);">6</strong>
+        Expert Quotes
+      </div>
+    </div>
+    <div style="font-size:12px; color:var(--ink3); border-top:1px solid var(--border); padding-top:10px;">
+      <span class="tag tag-gray">Politics</span>
+      <span class="tag tag-gray">Media Law</span>
+      <span class="tag tag-gray">IT Rules 2021</span>
+      <span class="tag tag-gray">Press Freedom</span>
+    </div>
+  </div>
+
+  <h4>Video Gallery Component (Auto-Updates)</h4>
+  <p style="font-size:13px; color:var(--ink2);">When admin adds a post with <code>content_type='video'</code>, it automatically appears in the Video Gallery section. Gallery is a React component that queries <code>/api/videos?limit=12&lang={lang}</code> — an ISR-cached Next.js API route. YouTube embeds are lazy-loaded with Intersection Observer. Live stream: admin pastes YouTube Live URL → system detects <code>isLive=true</code> via YouTube API → renders as live player with red "LIVE" badge.</p>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 4: ADMIN USER STORY ═══════════════════ -->
+<section id="admin-story">
+<div class="page">
+  <p class="section-label">Deliverable 04</p>
+  <h2>Admin User Story</h2>
+  <p class="lead">Two complete walkthroughs: uploading a Direct Banner Ad and publishing a multilingual news article from scratch. Every step exactly as the admin will experience it.</p>
+
+  <h3>Story A — Admin Uploads a Direct Banner Ad</h3>
+
+  <div class="story-step">
+    <div class="step-badge">A1</div>
+    <div class="step-content">
+      <h4>Login to Admin Dashboard</h4>
+      <p>Navigate to <code>admin.nknews.in</code>. Login with email + Google 2FA. Dashboard shows today's stats: pageviews, active ads, breaking news count.</p>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">A2</div>
+    <div class="step-content">
+      <h4>Open Ad Manager → New Advertisement</h4>
+      <p>Sidebar → "Ad Manager" → green "+ New Ad" button.</p>
+      <div class="step-screen">
+        Ad Type: [Banner ▼]<br>
+        Placement: [Sidebar 300×250 ▼]<br>
+        Upload Banner Image: [Choose File] ← auto-resized to spec<br>
+        Click URL: https://advertiser.com/campaign
+      </div>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">A3</div>
+    <div class="step-content">
+      <h4>Set Targeting &amp; Schedule</h4>
+      <p>Select target languages (Hindi, English, or all). Select categories (optional — e.g. only show in Politics section). Set start date, end date.</p>
+      <div class="step-screen">
+        Target Languages: [All ▼] or [Hindi, English ▼]<br>
+        Target Categories: [All] or [Politics, Business]<br>
+        Start Date: 01 Apr 2026  |  End Date: 30 Apr 2026<br>
+        Budget Notes: ₹50,000 / month (internal reference)
+      </div>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">A4</div>
+    <div class="step-content">
+      <h4>Save &amp; Activate</h4>
+      <p>Click "Save &amp; Activate". System stores ad in PostgreSQL. Status flips to "Scheduled" if start date is future, "Active" if today. Admin sees the ad live in the Ad Manager table with impression/click counter at 0.</p>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">A5</div>
+    <div class="step-content">
+      <h4>System Auto-Injects (No Further Action Needed)</h4>
+      <p>Next.js ad component queries <code>/api/ads?placement=sidebar&lang=hi&category=politics</code> — fetches active ads, renders the banner. CTR data tracked server-side, visible in Ad Manager dashboard.</p>
+      <div class="callout callout-gold" style="margin-top:10px;">
+        <strong>In-Article Ad Injection Logic</strong>
+        React's article renderer parses body JSONB. After every 3rd paragraph block, it checks <code>adSlots</code> context for an available in-article ad. If found, injects <code>&lt;AdUnit placement="in-article" /&gt;</code>. Alternates between direct ads and AdSense based on fill rate.
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:40px;">Story B — Admin Publishes a Multilingual News Article</h3>
+
+  <div class="story-step">
+    <div class="step-badge">B1</div>
+    <div class="step-content">
+      <h4>New Article → Choose Language of Authorship</h4>
+      <p>Dashboard → "New Article". Select "Write in: Hindi (हिंदी)". TipTap rich-text editor loads with Hindi keyboard-friendly input. Full Unicode Indic script rendering.</p>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">B2</div>
+    <div class="step-content">
+      <h4>Write Headline, Summary &amp; Body</h4>
+      <p>Admin types Hindi headline, 2-line summary (auto-used as meta description), and full body content. Embeds YouTube link in body → thumbnail auto-fetches. Uploads hero image → system auto-converts to WebP, generates 4 sizes.</p>
+      <div class="step-screen">
+        शीर्षक: भारत की डिजिटल अर्थव्यवस्था 1 ट्रिलियन डॉलर के पार<br>
+        सारांश: भारत ने डिजिटल क्षेत्र में ऐतिहासिक उपलब्धि हासिल की...<br>
+        Hero Image: [hero.jpg] → converting to WebP... ✓<br>
+        YouTube URL: https://youtube.com/watch?v=xxx → Thumbnail fetched ✓
+      </div>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">B3</div>
+    <div class="step-content">
+      <h4>Auto-Translate to All Languages</h4>
+      <p>Click blue "🌐 Auto-Translate (22 languages)" button. Progress bar shows Bhashini API processing. ~45 seconds for all 22 languages. Admin reviews critical translations (Hindi → English, Tamil, Bengali flagged for priority review).</p>
+      <div class="step-screen">
+        Translating via Bhashini ULCA API...<br>
+        ✓ English (en) — 1.2s<br>
+        ✓ Tamil (ta) — 2.1s  [Review recommended]<br>
+        ✓ Bengali (bn) — 1.8s<br>
+        ✓ Telugu (te) — 2.3s<br>
+        ✓ Marathi (mr) — 1.5s<br>
+        ... 17 more languages ✓<br>
+        All 22 translations complete. 3 flagged for review.
+      </div>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">B4</div>
+    <div class="step-content">
+      <h4>Assign Priority &amp; Category</h4>
+      <p>Priority dropdown: select "Top Story". Category: "Business". Tags: "GDP, Digital Economy, Tech". Set publish time: "Now" or schedule for 8:00 AM tomorrow.</p>
+    </div>
+  </div>
+
+  <div class="story-step">
+    <div class="step-badge">B5</div>
+    <div class="step-content">
+      <h4>Publish — System Takes Over</h4>
+      <p>Click "Publish". Within 5 seconds: (1) PostgreSQL record written. (2) Previous Top Story demoted to Featured. (3) ISR revalidation triggered for homepage in all 22 languages. (4) Sitemap updated. (5) hreflang tags live. (6) Social share cards generated. Admin sees green "Published ✓" toast.</p>
+      <div class="callout callout-teal" style="margin-top:10px;">
+        Admin's job is done. The article is now live at /en/, /hi/, /ta/, /bn/, … /kok/ (22 URLs) — each with proper hreflang, SEO metadata, and correct hero image in the Top Story slot.
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 5: MULTILINGUAL ═══════════════════ -->
+<section id="multilingual">
+<div class="page">
+  <p class="section-label">Deliverable 05</p>
+  <h2>Multilingual Strategy</h2>
+  <p class="lead">Supporting all 22 official Indian languages is not a feature — it is the core competitive advantage. The strategy covers URL architecture, Bhashini API integration, font rendering, SEO, and language switching UX.</p>
+
+  <h3>URL Architecture &amp; hreflang</h3>
+  <div class="lang-grid">
+    <div class="lang-pill"><span class="native">हिंदी</span><span class="eng">Hindi</span><span class="url-seg">/hi/</span></div>
+    <div class="lang-pill"><span class="native">मराठी</span><span class="eng">Marathi</span><span class="url-seg">/mr/</span></div>
+    <div class="lang-pill"><span class="native">বাংলা</span><span class="eng">Bengali</span><span class="url-seg">/bn/</span></div>
+    <div class="lang-pill"><span class="native">தமிழ்</span><span class="eng">Tamil</span><span class="url-seg">/ta/</span></div>
+    <div class="lang-pill"><span class="native">తెలుగు</span><span class="eng">Telugu</span><span class="url-seg">/te/</span></div>
+    <div class="lang-pill"><span class="native">ಕನ್ನಡ</span><span class="eng">Kannada</span><span class="url-seg">/kn/</span></div>
+    <div class="lang-pill"><span class="native">ગુજરાતી</span><span class="eng">Gujarati</span><span class="url-seg">/gu/</span></div>
+    <div class="lang-pill"><span class="native">ਪੰਜਾਬੀ</span><span class="eng">Punjabi</span><span class="url-seg">/pa/</span></div>
+    <div class="lang-pill"><span class="native">اردو</span><span class="eng">Urdu</span><span class="url-seg">/ur/</span></div>
+    <div class="lang-pill"><span class="native">ओड़िया</span><span class="eng">Odia</span><span class="url-seg">/or/</span></div>
+    <div class="lang-pill"><span class="native">മലയാളം</span><span class="eng">Malayalam</span><span class="url-seg">/ml/</span></div>
+    <div class="lang-pill"><span class="native">অসমীয়া</span><span class="eng">Assamese</span><span class="url-seg">/as/</span></div>
+    <div class="lang-pill"><span class="native">English</span><span class="eng">English</span><span class="url-seg">/en/</span></div>
+    <div class="lang-pill"><span class="native">संस्कृतम्</span><span class="eng">Sanskrit</span><span class="url-seg">/sa/</span></div>
+    <div class="lang-pill"><span class="native">नेपाली</span><span class="eng">Nepali</span><span class="url-seg">/ne/</span></div>
+    <div class="lang-pill"><span class="native">सिंधी</span><span class="eng">Sindhi</span><span class="url-seg">/sd/</span></div>
+    <div class="lang-pill"><span class="native">বড়ো</span><span class="eng">Bodo</span><span class="url-seg">/brx/</span></div>
+    <div class="lang-pill"><span class="native">डोगरी</span><span class="eng">Dogri</span><span class="url-seg">/doi/</span></div>
+    <div class="lang-pill"><span class="native">कश्मीरी</span><span class="eng">Kashmiri</span><span class="url-seg">/ks/</span></div>
+    <div class="lang-pill"><span class="native">कोंकणी</span><span class="eng">Konkani</span><span class="url-seg">/kok/</span></div>
+    <div class="lang-pill"><span class="native">मैथिली</span><span class="eng">Maithili</span><span class="url-seg">/mai/</span></div>
+    <div class="lang-pill"><span class="native">मणिपुरी</span><span class="eng">Manipuri</span><span class="url-seg">/mni/</span></div>
+  </div>
+
+  <h4>hreflang Head Tags (auto-injected by Next.js)</h4>
+  <pre><span class="cmt">&lt;!-- Next.js _app.tsx or layout.tsx — auto-generated per article --&gt;</span>
+<span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"alternate"</span> <span class="fn">hreflang</span>=<span class="str">"en"</span>  <span class="fn">href</span>=<span class="str">"https://nknews.in/en/india-digital-economy-1-trillion"</span> /&gt;
+<span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"alternate"</span> <span class="fn">hreflang</span>=<span class="str">"hi"</span>  <span class="fn">href</span>=<span class="str">"https://nknews.in/hi/bharat-digital-arthvyavastha-1-trillion"</span> /&gt;
+<span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"alternate"</span> <span class="fn">hreflang</span>=<span class="str">"ta"</span>  <span class="fn">href</span>=<span class="str">"https://nknews.in/ta/india-digital-palanaiyam-1-trillion"</span> /&gt;
+<span class="cmt">&lt;!-- ... 19 more hreflang tags --&gt;</span>
+<span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"alternate"</span> <span class="fn">hreflang</span>=<span class="str">"x-default"</span> <span class="fn">href</span>=<span class="str">"https://nknews.in/en/india-digital-economy-1-trillion"</span> /&gt;</pre>
+
+  <h3>Bhashini API Integration</h3>
+  <div class="api-flow">
+    <div class="api-step">
+      <div class="api-num">1</div>
+      <div>
+        <strong>Register on Bhashini ULCA Portal</strong>
+        <p>Obtain API key from bhashini.gov.in. Register NK News as a media organization for higher rate limits (recommended: 10,000 calls/day free tier).</p>
+      </div>
+    </div>
+    <div class="api-step">
+      <div class="api-num">2</div>
+      <div>
+        <strong>Pipeline Configuration API Call</strong>
+        <p>POST to <code>https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/getModelsPipeline</code> with source language, target language, and task type (translation). Get pipeline task sequence ID.</p>
+      </div>
+    </div>
+    <div class="api-step">
+      <div class="api-num">3</div>
+      <div>
+        <strong>Translation Inference Call</strong>
+        <p>POST to inference endpoint with text payload. Bhashini routes to best available model (e.g. IndicTrans2 for Hindi, AI4Bharat models for other languages). Response contains translated text in target script.</p>
+      </div>
+    </div>
+    <div class="api-step">
+      <div class="api-num">4</div>
+      <div>
+        <strong>Parallel Batch Processing</strong>
+        <p>NestJS BullMQ job queue processes all 22 language translations in parallel (not sequential). Estimated total time: 30–60 seconds for a 1000-word article. Results saved to <code>article_translations</code> table.</p>
+      </div>
+    </div>
+    <div class="api-step">
+      <div class="api-num">5</div>
+      <div>
+        <strong>Fallback: Google Translate API</strong>
+        <p>If Bhashini returns error or is rate-limited, NestJS falls back to Google Translate API v3. Fallback translations are flagged as <code>translation_source='google'</code> in the DB for editorial review.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Unicode &amp; Font Strategy</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Devanagari Script Group</h3>
+      <p>Hindi, Marathi, Sanskrit, Nepali, Dogri, Konkani, Maithili → <strong>Noto Sans Devanagari</strong> (Google Fonts, preloaded). Line height: 1.8 for readability.</p>
+    </div>
+    <div class="card">
+      <h3>South Indian Scripts</h3>
+      <p>Tamil → Noto Sans Tamil. Telugu → Noto Sans Telugu. Kannada → Noto Sans Kannada. Malayalam → Noto Sans Malayalam. All loaded via font-display: swap.</p>
+    </div>
+    <div class="card">
+      <h3>East Indian &amp; Others</h3>
+      <p>Bengali/Assamese → Noto Sans Bengali. Odia → Noto Sans Odia. Punjabi → Noto Sans Gurmukhi. Urdu → Noto Nastaliq Urdu (RTL support enabled).</p>
+    </div>
+    <div class="card">
+      <h3>RTL Support (Urdu/Kashmiri)</h3>
+      <p>Next.js <code>dir="rtl"</code> set when <code>lang='ur'</code> or <code>lang='ks'</code>. Tailwind CSS RTL plugin used. Flexbox direction auto-reverses. Ticker scrolls right-to-left.</p>
+    </div>
+  </div>
+
+  <h3>Language Switcher UX</h3>
+  <p>Sticky language selector in the header shows the current language name in its own script (e.g. "हिंदी" not "Hindi"). Dropdown shows all 22 languages grouped by script family. Preference stored in cookie (<code>nk_lang</code>) and <code>localStorage</code>. Next.js middleware reads cookie on every request and redirects to correct <code>/[lang]/</code> prefix.</p>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 6: TECH STACK ═══════════════════ -->
+<section id="stack">
+<div class="page">
+  <p class="section-label">Technical Architecture</p>
+  <h2>Full Tech Stack (2026)</h2>
+
+  <table class="stack-table">
+    <tr><th>Layer</th><th>Technology</th><th>Rationale</th><th>Version</th></tr>
+    <tr><td>Frontend</td><td>Next.js 15 + App Router</td><td>SSR, ISR, Edge Runtime, built-in i18n, optimal SEO</td><td>15.x</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS + shadcn/ui</td><td>Utility-first, consistent design system, RTL plugin</td><td>4.x</td></tr>
+    <tr><td>Rich Text</td><td>TipTap Editor</td><td>JSONB AST, multilingual input, custom extensions</td><td>2.x</td></tr>
+    <tr><td>Backend</td><td>NestJS (Node.js)</td><td>TypeScript, modular, WebSocket support, BullMQ jobs</td><td>10.x</td></tr>
+    <tr><td>Database</td><td>PostgreSQL 16</td><td>JSONB for content AST, full-text search (tsvector), UUID PKs</td><td>16.x</td></tr>
+    <tr><td>Cache/RT</td><td>Redis 7 (Upstash)</td><td>Breaking news pub/sub, ISR cache, rate limiting</td><td>7.x</td></tr>
+    <tr><td>Media Storage</td><td>AWS S3 + CloudFront</td><td>CDN edge delivery, WebP transcoding via Sharp.js + Lambda</td><td>—</td></tr>
+    <tr><td>Auth</td><td>NextAuth.js v5 + Google OAuth</td><td>Admin login, 2FA via TOTP, role-based access control</td><td>5.x</td></tr>
+    <tr><td>Job Queue</td><td>BullMQ (Redis-backed)</td><td>Async translation jobs, media processing, sitemap generation</td><td>5.x</td></tr>
+    <tr><td>Search</td><td>MeiliSearch</td><td>Multilingual full-text search with Indic script support</td><td>1.x</td></tr>
+    <tr><td>Translation</td><td>Bhashini ULCA API + Google Translate v3</td><td>India-native primary, Google as fallback</td><td>—</td></tr>
+    <tr><td>Push Notifications</td><td>Firebase Cloud Messaging</td><td>Breaking news push to mobile/PWA</td><td>—</td></tr>
+    <tr><td>Analytics</td><td>Plausible (self-hosted)</td><td>Privacy-compliant, no third-party cookies, DPDP Act ready</td><td>—</td></tr>
+    <tr><td>Hosting</td><td>AWS (EC2 + RDS + ElastiCache)</td><td>Mumbai region (ap-south-1) for low latency</td><td>—</td></tr>
+    <tr><td>ORM</td><td>Prisma + Drizzle (API layer)</td><td>Type-safe queries, migration management</td><td>—</td></tr>
+    <tr><td>Monitoring</td><td>Sentry + Datadog</td><td>Error tracking, APM, uptime alerts</td><td>—</td></tr>
+  </table>
+
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 7: COMPLIANCE ═══════════════════ -->
+<section id="compliance">
+<div class="page">
+  <p class="section-label">Legal & Regulatory</p>
+  <h2>IT Rules 2021 &amp; MIB Compliance</h2>
+
+  <div class="card-grid">
+    <div class="card" style="border-left:4px solid var(--red);">
+      <h3>Grievance Officer (Rule 2(w))</h3>
+      <p>Dedicated <code>/grievance</code> page with Officer name, email, physical address, phone number. Complaint form with auto-ticketing (24hr acknowledgement, 15-day resolution mandate). Database table: <code>grievances</code>.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--gold);">
+      <h3>MIB Publisher Disclosure</h3>
+      <p>Footer contains: Owner name, registration number, editor name, registered address, state, country. Visible on every page. Pulled from a <code>site_settings</code> table — no hardcoding.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--teal);">
+      <h3>DPDP Act 2023</h3>
+      <p>Cookie consent banner (first visit). Privacy policy page. Data minimization: we store only name + email for accounts. No behavioral tracking sold to third parties. Plausible Analytics (cookieless).</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--blue);">
+      <h3>Content Takedown (Rule 3)</h3>
+      <p>Admin can unpublish any article in 1 click. Automated takedown if flagged by MIB order: <code>status='taken_down'</code> with order reference ID stored. Returns 451 (Legal Reasons) HTTP status.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-red" style="margin-top:24px;">
+    <strong>Critical: Monthly Compliance Report</strong>
+    The Admin panel includes a "Compliance Dashboard" that auto-generates the monthly report required under IT Rules 2021 Rule 4(1)(d): number of complaints received, resolved, pending, and content removed. Exportable as PDF for MIB submission.
+  </div>
+
+</div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div>
+    <strong>NK News Architecture Document</strong><br>
+    Version 10.0 · Confidential · March 2026
+  </div>
+  <div style="text-align:right;">
+    Prepared by Lead PM &amp; Full-Stack Architect<br>
+    Next review: Q2 2026
+  </div>
+</footer>
+
+</body>
+</html>

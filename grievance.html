@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grievance Redressal — NK News</title>
+  <meta name="description" content="NK News Grievance Redressal Portal — IT Rules 2021 Compliance"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="header-top">
+    <div style="display:flex; align-items:center;">
+      <a href="index.html" class="header-logo">NK<span>News</span></a>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<nav class="category-nav">
+  <div class="category-nav-inner">
+    <a href="index.html">Home</a>
+    <a href="category.html?cat=politics">Politics</a>
+    <a href="category.html?cat=business">Business</a>
+    <a href="category.html?cat=technology">Technology</a>
+    <a href="category.html?cat=sports">Sports</a>
+    <a href="category.html?cat=world">World</a>
+    <a href="category.html?cat=culture">Culture</a>
+  </div>
+</nav>
+
+<!-- GRIEVANCE CONTENT -->
+<section style="padding-top: 16px; padding-bottom: 48px;">
+  <div class="container" style="max-width: 800px;">
+    <nav class="breadcrumb">
+      <a href="index.html">Home</a> / <span>Grievance Redressal</span>
+    </nav>
+
+    <h1 class="section-title" style="font-size: 32px; margin-bottom: 8px;"><span class="accent"></span>Grievance Redressal</h1>
+    <p style="color: var(--ink3); margin-bottom: 32px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;">INFORMATION TECHNOLOGY (INTERMEDIARY GUIDELINES AND DIGITAL MEDIA ETHICS CODE) RULES, 2021</p>
+
+    <!-- Grievance Officer -->
+    <div class="footer-compliance" style="margin-bottom: 32px; border-radius: var(--radius);">
+      <div class="compliance-title" style="margin-bottom: 12px;">Grievance Officer Details</div>
+      <div style="font-size: 14px; line-height: 2; color: var(--ink2);">
+        <strong>Name:</strong> Amit Verma<br/>
+        <strong>Designation:</strong> Grievance Officer<br/>
+        <strong>Organization:</strong> NK News Media Private Limited<br/>
+        <strong>Email:</strong> <a href="mailto:grievance@nknews.in" style="color: var(--red); font-weight: 600;">grievance@nknews.in</a><br/>
+        <strong>Address:</strong> 4th Floor, Digital Media Tower, Sector 62, Noida, Uttar Pradesh 201301, India<br/>
+        <strong>Response Time:</strong> Within 24 hours of receipt<br/>
+        <strong>Resolution Time:</strong> Within 15 days (as per IT Rules 2021, Rule 2(w))
+      </div>
+    </div>
+
+    <!-- Complaint Form -->
+    <div style="background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 32px;">
+      <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Submit a Complaint</h2>
+      <form id="grievanceForm">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Full Name *</label>
+            <input type="text" required style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:var(--font-sans);" placeholder="Your full name"/>
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Email *</label>
+            <input type="email" required style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:var(--font-sans);" placeholder="your@email.com"/>
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Complaint Type *</label>
+          <select required style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:var(--font-sans);">
+            <option value="">Select type...</option>
+            <option value="content">Content Related</option>
+            <option value="privacy">Privacy / Data Protection</option>
+            <option value="factual">Factual Error</option>
+            <option value="defamation">Defamation</option>
+            <option value="copyright">Copyright Violation</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Article URL (if applicable)</label>
+          <input type="url" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:var(--font-sans);" placeholder="https://nknews.in/..."/>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label style="display:block; font-size:12px; font-weight:600; color:var(--ink2); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Description *</label>
+          <textarea required rows="6" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--radius); font-size:14px; font-family:var(--font-sans); resize:vertical;" placeholder="Describe your complaint in detail..."></textarea>
+        </div>
+        <button type="submit" style="background:var(--red); color:white; padding:12px 32px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font-sans);">Submit Complaint</button>
+      </form>
+
+      <!-- Success message (hidden by default) -->
+      <div id="successMsg" style="display:none; text-align:center; padding:40px 0;">
+        <div style="font-size:48px; margin-bottom:16px;">✅</div>
+        <h3 style="font-size:20px; margin-bottom:8px;">Complaint Submitted</h3>
+        <p style="color:var(--ink3); margin-bottom:8px;">Your ticket number is:</p>
+        <p id="ticketNum" style="font-family:var(--font-mono); font-size:24px; font-weight:700; color:var(--red); margin-bottom:16px;"></p>
+        <p style="color:var(--ink3); font-size:14px;">You will receive a response within 24 hours at your email address.<br/>Resolution within 15 days as per IT Rules 2021.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 NK News Media Pvt. Ltd. All rights reserved.</span>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Theme
+  const themeBtn = document.getElementById('themeBtn');
+  if (localStorage.getItem('nk_theme') === 'dark') { document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='☀️'; }
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('nk_theme','light'); themeBtn.textContent='🌙'; }
+    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('nk_theme','dark'); themeBtn.textContent='☀️'; }
+  });
+
+  // Form
+  document.getElementById('grievanceForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ticket = 'NK-GRV-' + Date.now().toString().slice(-8);
+    document.getElementById('ticketNum').textContent = ticket;
+    document.getElementById('grievanceForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+});
+</script>
+</body>
+</html>
