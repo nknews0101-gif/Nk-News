@@ -183,7 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('categoryArticles').innerHTML = articles.map(a => {
       const title = NKData.localText(a.title);
-      const excerpt = NKData.localText(a.excerpt);
+      const rawExcerpt = NKData.localText(a.excerpt);
+      const excerpt = typeof rawExcerpt === 'string' ? rawExcerpt.replace(/<[^>]*>?/gm, '').substring(0, 160) : '';
       const typeMap = { video: 'content-type-badge--video', photo_story: 'content-type-badge--photo', live: 'content-type-badge--live', opinion: 'content-type-badge--opinion' };
       const typeEmoji = { video: '▶️ Video', photo_story: '📸 Photo Story', live: '🔴 Live', opinion: '✍️ Opinion' };
 
@@ -192,9 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
         badge = `<span class="content-type-badge ${typeMap[a.contentType]}">${typeEmoji[a.contentType]}</span>`;
       }
 
+      const placeholderLabel = catName || cat;
+
       return `
         <article class="news-card">
-          <div class="news-card-image">${a.images && a.images[0] ? `<img src="${a.images[0]}" alt="${title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="hero-image-placeholder" style="height:100%;font-size:11px;display:none;">${catInfo.en} · Image</div>` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en} · Image</div>`}</div>
+          <div class="news-card-image">${a.images && a.images[0] ? `<img src="${a.images[0]}" alt="${title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="hero-image-placeholder" style="height:100%;font-size:11px;display:none;">${placeholderLabel} · Image</div>` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px;">${placeholderLabel} · Image</div>`}</div>
           <div class="news-card-body">
             ${badge}
             <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${title}</a></h3>

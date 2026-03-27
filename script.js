@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="news-card-body">
               ${badge}
               <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${NKData.localText(a.title)}</a></h3>
-              <p class="news-card-excerpt">${NKData.localText(a.excerpt)}</p>
+              <p class="news-card-excerpt">${(NKData.localText(a.excerpt) || '').replace(/<[^>]*>?/gm, '').substring(0, 160)}</p>
               <div class="news-card-meta">
                 <span>${NKData.timeAgo(a.publishedAt)}</span>
                 <span>${(a.views||0).toLocaleString()} ${NKData.t('views')}</span>
