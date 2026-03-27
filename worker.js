@@ -55,9 +55,20 @@ async function fetchCategoryFeeds() {
 
         // --- FULL TEXT SCRAPING (JSDOM + Readability) ---
         try {
-            console.log(`  -> Scraping full article: ${item.link}`);
+            // Decode Google News Base64 Redirects to bypass 403 Bot-Block
+            let targetUrl = item.link;
+            try {
+              const b64 = item.link.split('/articles/')[1]?.split('?')[0];
+              if (b64) {
+                const decoded = Buffer.from(b64.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8');
+                const match = decoded.match(/https?:\/\/[^\s\"\']+/);
+                if (match) targetUrl = match[0].replace(/[\x00-\x1F\x7F]/g, '');
+              }
+            } catch (e) {}
+
+            console.log(`  -> Scraping full article: ${targetUrl}`);
             // Fetch source HTML with a fake user agent to bypass basic blocks
-            const htmlRes = await fetch(item.link, {
+            const htmlRes = await fetch(targetUrl, {
               headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
             });
             const htmlText = await htmlRes.text();
@@ -117,7 +128,7 @@ async function fetchCategoryFeeds() {
           id,
           title: { en: await translateText(titleEn, 'en'), hi: titleHi, bn: titleBn },
           excerpt: { en: excerptEn, hi: excerptHi, bn: excerptBn },
-          body: { en: `${fullHtmlBodyEn}<br><p><strong>Source / <i>स्रोत</i></strong>: <a href="${item.link}" target="_blank" style="color:red; font-weight:600;">Read Full Report ↗</a></p>` },
+          body: { en: `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>` },
           category: feed.category,
           author: 'Auto News Matrix',
           status: 'published',
