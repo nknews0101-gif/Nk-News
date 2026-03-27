@@ -52,8 +52,20 @@ body {
     background: var(--bg_back) !important;
 }
 
-.news_1_left2_inner2 {
-    bottom: 20px;
+/* ── HERO & BREADCRUMB ── */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "|";
+    color: var(--border_light);
+}
+
+.hero-detail {
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 2rem;
+}
+
+.hero-detail img {
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .news_1_left2_inner1 img {
@@ -534,7 +546,7 @@ a:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: hsl(var(--primary));
+  background-color: var(--orange);
   color: white;
   margin-bottom: 1rem;
 }

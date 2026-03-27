@@ -50,40 +50,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const featured = articles.filter(a => a.priority === 'featured').slice(0, 3);
 
     if (topStory) {
-      const cat = NKData.getCategoryInfo(topStory.category);
       const bgImage = topStory.images && topStory.images[0] ? topStory.images[0] : 'https://images.unsplash.com/photo-1504711331083-9c895941bf81?q=80&w=1000';
       
       heroMain.innerHTML = `
-        <div class="trend_1_left position-relative carousel_p">
-          <div class="news_1_left2_inner border_light overflow-hidden position-relative">
-             <div class="news_1_left2_inner1">
-                <img src="${bgImage}" class="w-100" alt="${NKData.localText(topStory.title)}">
-             </div>
-             <div class="news_1_left2_inner2 position-absolute p-4 w-100 bg_back">
-                <h6 class="text-white bg_orange d-table px-3 py-1 mb-3 font_12 uppercase">${NKData.t(topStory.category)}</h6>
-                <h2 class="text-white mb-3 family_1"><a href="article.html?id=${topStory.id}" class="text-white">${NKData.localText(topStory.title)}</a></h2>
-                <p class="text-white-50 mb-0 font_14 line-clamp-2">${NKData.localText(topStory.excerpt)}</p>
-             </div>
-          </div>
+        <div class="hero-detail animate-fade-up">
+           <div class="rounded overflow-hidden mb-4 shadow-sm border_light">
+              <img src="${bgImage}" class="w-100 transition" alt="${NKData.localText(topStory.title)}" style="height: 480px; object-fit: cover;">
+           </div>
+           <div>
+              <nav aria-label="breadcrumb" class="mb-2">
+                  <ol class="breadcrumb font_12 uppercase bold mb-0">
+                      <li class="breadcrumb-item col_orange">${NKData.t(topStory.category)}</li>
+                      <li class="breadcrumb-item text-muted">${NKData.timeAgo(topStory.publishedAt)}</li>
+                  </ol>
+              </nav>
+              <h1 class="family_1 bold mb-3" style="font-size: 2.5rem; line-height: 1.1;">
+                <a href="article.html?id=${topStory.id}">${NKData.localText(topStory.title)}</a>
+              </h1>
+              <p class="text-muted mb-0 font_15 line-clamp-3">${NKData.localText(topStory.excerpt)}</p>
+           </div>
         </div>
       `;
     }
 
     // Sidebar (Featured)
     heroSidebar.innerHTML = `
-      <div class="trend_1_right">
-        <h4 class="mb-4 border-bottom pb-2 font_16 uppercase bold">${NKData.t('featured_stories')}</h4>
+      <div class="trend_1_right ps-lg-3">
+        <h4 class="mb-4 border-bottom pb-2 font_16 uppercase bold design border_light px-3 py-1">Trending News</h4>
         ${featured.map(a => `
-          <div class="trend_2_inner mb-3 d-flex align-items-center gap-3">
-             <div class="trend_2_inner_l w-25">
-                <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/150'}" class="w-100 rounded" alt="thumb">
+          <div class="trend_2_inner mb-3 d-flex align-items-center gap-3 border_light p-2 rounded shadow-sm bg_light">
+             <div class="trend_2_inner_l w-25 overflow-hidden rounded" style="height:60px;">
+                <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/150'}" class="w-100 h-100 object-fit-cover" alt="thumb">
              </div>
              <div class="trend_2_inner_r w-75">
                 <h6 class="font_13 line-clamp-2 bold mb-1"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
-                <span class="font_11 text-muted uppercase">${NKData.timeAgo(a.publishedAt)}</span>
+                <span class="font_11 text-muted uppercase bold">${NKData.timeAgo(a.publishedAt)}</span>
              </div>
           </div>
         `).join('')}
+        <div class="bg-dark text-white p-4 mt-5 rounded shadow d-none d-lg-block">
+            <h5 class="bold mb-2 font_14 uppercase">24/7 AI Coverage</h5>
+            <p class="font_11 text-white-50 mb-0">Our AI engine publishes real-time updates every 30 minutes from global sources.</p>
+        </div>
       </div>
     `;
   }
@@ -95,41 +103,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cats = ['politics', 'business', 'technology', 'sports', 'world', 'culture'];
     
-    container.innerHTML = cats.map(catId => {
-      const articles = NKData.getArticlesByCategory(catId).slice(0, 4);
-      if (articles.length === 0) return '';
+    container.innerHTML = `
+      <div class="container py-4">
+        <div class="row g-5">
+          ${cats.map(catId => {
+            const articles = NKData.getArticlesByCategory(catId).slice(0, 4);
+            if (articles.length === 0) return '';
 
-      const catName = NKData.t(catId);
-
-      return `
-        <section class="py-5 border-top">
-          <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h3 class="bold uppercase design border_light px-3 py-2 font_18">${catName}</h3>
-              <a href="category.html?cat=${catId}" class="col_orange bold font_13 uppercase">${NKData.t('view_all')} <i class="bi bi-arrow-right"></i></a>
-            </div>
-            <div class="row g-4">
-              ${articles.map(a => `
-                <div class="col-lg-3 col-md-6">
-                  <div class="trend_2_inner h-100">
-                    <div class="trend_2_inner_l mb-3 overflow-hidden" style="height:160px;">
-                      <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/400x250'}" class="w-100 h-100 object-fit-cover transition" alt="img">
-                    </div>
-                    <div class="trend_2_inner_r">
-                      <h5 class="font_14 bold line-clamp-3 mb-2"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h5>
-                      <div class="d-flex justify-content-between align-items-center font_11 text-muted">
-                        <span>${NKData.timeAgo(a.publishedAt)}</span>
-                        <span class="bg_light px-2 py-1 rounded">${(a.views||0).toLocaleString()} <i class="bi bi-eye"></i></span>
+            return `
+              <div class="col-lg-6 mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                  <h3 class="bold uppercase design border_light px-3 py-2 font_16 mb-0">${NKData.t(catId)}</h3>
+                  <a href="category.html?cat=${catId}" class="col_orange bold font_11 uppercase">${NKData.t('view_all')} <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="row g-3">
+                  ${articles.map((a, i) => i === 0 ? `
+                    <div class="col-12 mb-3">
+                      <div class="trend_2_inner h-100 card border-0 p-0 shadow-sm overflow-hidden">
+                        <div style="height:200px; overflow:hidden;">
+                          <img src="${a.images?.[0] || ''}" class="w-100 h-100 object-fit-cover transition" />
+                        </div>
+                        <div class="p-3">
+                          <h5 class="font_15 bold line-clamp-2"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h5>
+                          <span class="font_11 text-muted uppercase bold">${NKData.timeAgo(a.publishedAt)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ` : `
+                    <div class="col-md-4">
+                      <div class="trend_2_inner h-100 text-center">
+                        <div class="mb-2 overflow-hidden rounded shadow-sm" style="height:80px;">
+                          <img src="${a.images?.[0] || ''}" class="w-100 h-100 object-fit-cover" />
+                        </div>
+                        <h6 class="font_11 bold line-clamp-3 mb-0"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
+                      </div>
+                    </div>
+                  `).join('')}
                 </div>
-              `).join('')}
-            </div>
-          </div>
-        </section>
-      `;
-    }).join('');
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
   }
 
   // ── DEEP ANALYSIS ──
