@@ -10,7 +10,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // ── UI TRANSLATIONS (All 22 Languages) ──
 const TRANSLATIONS = {
   en: { 
-    politics: 'Politics', business: 'Business', technology: 'Technology', sports: 'Sports', world: 'World', culture: 'Culture', opinion: 'Opinion', videos: 'Videos',
+    politics: 'Politics', business: 'Business', technology: 'Technology', sports: 'Sports', world: 'World', culture: 'Culture', 'uttar-pradesh': 'Uttar Pradesh', gorakhpur: 'Gorakhpur', opinion: 'Opinion', videos: 'Videos',
     featured_stories: 'Featured Stories', top_story: 'Top Story', in_depth: 'In-Depth Analysis', most_read: 'Most Read', video_gallery: 'Video Gallery', view_all: 'View All →',
     by: 'By', min_read: 'min read', hours_ago: 'h ago', mins_ago: 'm ago', days_ago: 'd ago', just_now: 'Just now', breaking: 'BREAKING',
     newsletter_title: 'Stay Informed. Stay Ahead.', newsletter_desc: 'Get NK News delivered to your inbox — breaking headlines, deep analysis, and exclusive stories.', subscribe: 'Subscribe', your_email: 'Your email address',
@@ -22,7 +22,7 @@ const TRANSLATIONS = {
     ad_sidebar: 'Ad Slot — Sidebar 300×250', ad_auto: 'Auto-injected from Ad Manager'
   },
   hi: { 
-    politics: 'राजनीति', business: 'व्यापार', technology: 'तकनीक', sports: 'खेल', world: 'विश्व', culture: 'संस्कृति', opinion: 'विचार', videos: 'वीडियो',
+    politics: 'राजनीति', business: 'व्यापार', technology: 'तकनीक', sports: 'खेल', world: 'विश्व', culture: 'संस्कृति', 'uttar-pradesh': 'उत्तर प्रदेश', gorakhpur: 'गोरखपुर', opinion: 'विचार', videos: 'वीडियो',
     featured_stories: 'प्रमुख ख़बरें', top_story: 'मुख्य ख़बर', in_depth: 'गहन विश्लेषण', most_read: 'सबसे ज़्यादा पढ़ी गई', video_gallery: 'वीडियो गैलरी', view_all: 'सभी देखें →',
     by: 'लेखक', min_read: 'मिनट पठन', hours_ago: 'घंटे पहले', mins_ago: 'मिनट पहले', days_ago: 'दिन पहले', just_now: 'अभी', breaking: 'ब्रेकिंग',
     newsletter_title: 'सूचित रहें। आगे रहें।', newsletter_desc: 'NK News को अपने इनबॉक्स में पाएं — ब्रेकिंग हेडलाइंस, गहन विश्लेषण, और विशेष ख़बरें।', subscribe: 'सदस्यता लें', your_email: 'आपका ईमेल पता',
