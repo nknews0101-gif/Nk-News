@@ -20,14 +20,14 @@ async function translateText(text, tl) {
 async function fetchCategoryFeeds() {
   console.log('Starting Multi-Source Global News sync...');
   const FEEDS = [
-    { url: 'https://news.google.com/rss/search?q=Politics+India&hl=en-IN&gl=IN&ceid=IN:en', category: 'politics' },
-    { url: 'https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-IN&gl=IN&ceid=IN:en', category: 'business' },
-    { url: 'https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-IN&gl=IN&ceid=IN:en', category: 'technology' },
-    { url: 'https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-IN&gl=IN&ceid=IN:en', category: 'sports' },
-    { url: 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en', category: 'world' },
-    { url: 'https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-IN&gl=IN&ceid=IN:en', category: 'culture' },
-    { url: 'https://news.google.com/rss/search?q=Uttar+Pradesh&hl=hi&gl=IN&ceid=IN:hi', category: 'uttar-pradesh' },
-    { url: 'https://news.google.com/rss/search?q=Gorakhpur&hl=hi&gl=IN&ceid=IN:hi', category: 'gorakhpur' }
+    { url: 'https://www.ndtv.com/rss/india-news', category: 'politics' },
+    { url: 'https://www.moneycontrol.com/rss/latestnews.xml', category: 'business' },
+    { url: 'https://www.gadgets360.com/rss/news', category: 'technology' },
+    { url: 'https://timesofindia.indiatimes.com/rssfeeds/4719148.cms', category: 'sports' },
+    { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'world' },
+    { url: 'https://www.ndtv.com/rss/entertainment', category: 'culture' },
+    { url: 'https://www.jagran.com/rss/uttar-pradesh/national.xml', category: 'uttar-pradesh' },
+    { url: 'https://www.jagran.com/rss/uttar-pradesh/gorakhpur.xml', category: 'gorakhpur' }
   ];
 
   for (const feed of FEEDS) {
@@ -46,8 +46,12 @@ async function fetchCategoryFeeds() {
       for (const item of topItems) {
         const publishedAt = new Date(item.pubDate || new Date()).getTime();
         
-        let titleEn = item.title || '';
-        titleEn = titleEn.split(' - ').slice(0, -1).join(' - ') || titleEn;
+        let rawTitle = item.title || '';
+        // NDTV/TOI often append " - NDTV.com" to titles. Clean that up.
+        rawTitle = rawTitle.split(' - ').slice(0, -1).join(' - ') || rawTitle;
+        
+        // Translate to English first as our base if source is different
+        const titleEn = await translateText(rawTitle, 'en');
         
         let decodedDesc = (item.description || '').replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
         let fullHtmlBodyEn = `<p>${decodedDesc}</p>`;
@@ -55,44 +59,31 @@ async function fetchCategoryFeeds() {
 
         // --- FULL TEXT SCRAPING (JSDOM + Readability) ---
         try {
-            // Decode Google News Base64 Redirects to bypass 403 Bot-Block
-            let targetUrl = item.link;
-            try {
-              const b64 = item.link.split('/articles/')[1]?.split('?')[0];
-              if (b64) {
-                const decoded = Buffer.from(b64.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8');
-                const match = decoded.match(/https?:\/\/[^\s\"\']+/);
-                if (match) targetUrl = match[0].replace(/[\x00-\x1F\x7F]/g, '');
-              }
-            } catch (e) {}
-
-            console.log(`  -> Scraping full article: ${targetUrl}`);
-            // Fetch source HTML with a fake user agent to bypass basic blocks
+            const targetUrl = item.link;
+            console.log(`  -> Scraping: ${targetUrl}`);
+            
             const htmlRes = await fetch(targetUrl, {
-              headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+              headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }
             });
             const htmlText = await htmlRes.text();
             
-            // JSDOM Parsing
-            const doc = new JSDOM(htmlText, { url: item.link });
+            const doc = new JSDOM(htmlText, { url: targetUrl });
             const reader = new Readability(doc.window.document);
             const articleData = reader.parse();
             
             if (articleData && articleData.content) {
-                // Use Readability's clean, reading-mode HTML
                 fullHtmlBodyEn = articleData.content;
-                // Excerpt can be taken directly from the parsed text content
                 decodedDesc = (articleData.excerpt || articleData.textContent.substring(0, 160)).trim() + '...';
                 
-                // Get the best native image
-                const ogImage = doc.window.document.querySelector('meta[property="og:image"]')?.content;
+                // Better Image Extraction (OG Image > Lead Image > First article image)
+                const ogImage = doc.window.document.querySelector('meta[property="og:image"]')?.getAttribute('content');
                 finalImageSrc = ogImage || articleData.leadImageUrl;
             }
         } catch (scrapeErr) {
-            console.log(`  -> Scrape failed, falling back to RSS excerpt:`, scrapeErr.message);
+            console.log(`  -> Scrape failed:`, scrapeErr.message);
         }
         
-        // Translate to top UI languages immediately
+        // Translate to UI languages
         const titleHi = await translateText(titleEn, 'hi');
         const titleBn = await translateText(titleEn, 'bn');
         const excerptEn = await translateText(decodedDesc, 'en');
