@@ -332,7 +332,7 @@ const NKData = {
   getArticles() {
     this.init();
     const articles = JSON.parse(localStorage.getItem('nk_articles') || '[]');
-    return articles.filter(a => a.status === 'published')
+    return articles.filter(a => !a.status || a.status === 'published')
                    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
   },
 

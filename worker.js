@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { XMLParser } = require('fast-xml-parser');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -72,6 +73,7 @@ async function syncNews() {
       body: { en: `<p>${excerptEn}</p><p>Read more at: <a href="${item.link}" target="_blank">${item.link}</a></p>` },
       category: 'politics', // fallback
       author: 'NDTV (Auto)',
+      status: 'published',
       publishedAt,
       views: 0,
       contentType: 'article',
