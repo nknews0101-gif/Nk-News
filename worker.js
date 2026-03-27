@@ -60,6 +60,28 @@ async function fetchCategoryFeeds() {
         const rawGuid = (typeof item.guid === 'object' ? item.guid['#text'] : item.guid) || item.title;
         const id = 'art-' + Buffer.from(String(rawGuid)).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
         
+        let imgSrc = null;
+        if (item['media:content'] && item['media:content']['@_url']) {
+            imgSrc = item['media:content']['@_url'];
+        } else if (item.description) {
+            const imgMatch = item.description.match(/<img[^>]+src="([^">]+)"/);
+            if (imgMatch && imgMatch[1]) imgSrc = imgMatch[1];
+        }
+
+        if (!imgSrc) {
+            const fallbacks = {
+                'politics': 'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&q=80',
+                'business': 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80',
+                'technology': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+                'sports': 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80',
+                'world': 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800&q=80',
+                'culture': 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80',
+                'uttar-pradesh': 'https://images.unsplash.com/photo-1564507592208-528f1e4ceac8?w=800&q=80',
+                'gorakhpur': 'https://images.unsplash.com/photo-1506869640319-fea1a80d4bd3?w=800&q=80'
+            };
+            imgSrc = fallbacks[feed.category] || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80';
+        }
+
         const article = {
           id,
           title: { en: await translateText(titleEn, 'en'), hi: titleHi, bn: titleBn },
@@ -71,7 +93,7 @@ async function fetchCategoryFeeds() {
           publishedAt,
           views: Math.floor(Math.random() * 500) + 50,
           contentType: 'article',
-          images: [],
+          images: [imgSrc],
           tags: ['Global Sync']
         };
         
