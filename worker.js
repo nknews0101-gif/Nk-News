@@ -20,20 +20,24 @@ async function translateText(text, tl) {
 async function fetchCategoryFeeds() {
   console.log('Starting Multi-Source Global News sync...');
   const FEEDS = [
-    { url: 'https://www.ndtv.com/rss/india-news', category: 'politics' },
+    { url: 'https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms', category: 'politics' },
     { url: 'https://www.moneycontrol.com/rss/latestnews.xml', category: 'business' },
     { url: 'https://www.gadgets360.com/rss/news', category: 'technology' },
     { url: 'https://timesofindia.indiatimes.com/rssfeeds/4719148.cms', category: 'sports' },
     { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', category: 'world' },
-    { url: 'https://www.ndtv.com/rss/entertainment', category: 'culture' },
-    { url: 'https://www.jagran.com/rss/uttar-pradesh/national.xml', category: 'uttar-pradesh' },
-    { url: 'https://www.jagran.com/rss/uttar-pradesh/gorakhpur.xml', category: 'gorakhpur' }
+    { url: 'https://feeds.feedburner.com/ndtvnews-trending-news', category: 'culture' },
+    { url: 'https://api.livehindustan.com/feeds/rss/uttar-pradesh/rssfeed.xml', category: 'uttar-pradesh' },
+    { url: 'https://api.livehindustan.com/feeds/rss/uttar-pradesh/gorakhpur/rssfeed.xml', category: 'gorakhpur' },
+    { url: 'https://indianexpress.com/section/opinion/feed/', category: 'opinion' }
   ];
 
   for (const feed of FEEDS) {
     try {
       console.log(`Processing category: ${feed.category}`);
-      const res = await fetch(feed.url);
+      const res = await fetch(feed.url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status} on ${feed.url}`);
       const xml = await res.text();
       const parser = new XMLParser({ ignoreAttributes: false, processEntities: false });
       const jsonObj = parser.parse(xml);
@@ -90,8 +94,9 @@ async function fetchCategoryFeeds() {
         const excerptHi = await translateText(decodedDesc, 'hi');
         const excerptBn = await translateText(decodedDesc, 'bn');
         
-        const rawGuid = (typeof item.guid === 'object' ? item.guid['#text'] : item.guid) || item.title;
-        const id = 'art-' + Buffer.from(String(rawGuid)).toString('base64').replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
+        const rawGuid = (typeof item.guid === 'object' ? item.guid['#text'] : item.guid) || item.link || item.title;
+        const b64 = Buffer.from(String(rawGuid)).toString('base64').replace(/[^a-zA-Z0-9]/g, '');
+        const id = 'art-' + (b64.substring(0, 15) + b64.substring(b64.length - 15));
         
         let imgSrc = finalImageSrc;
         if (!imgSrc && item['media:content'] && item['media:content']['@_url']) {
