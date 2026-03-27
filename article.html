@@ -5,284 +5,299 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Article — NK News</title>
   <meta name="description" content="Read the full article on NK News"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="styles.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Faculty+Glyphic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- HEADER (same as index) -->
-<header class="header" id="header">
-  <div class="header-top">
-    <div style="display:flex; align-items:center;">
-      <a href="index.html" class="header-logo">NK<span>News</span></a>
-      <span class="header-datetime" id="headerDate"></span>
-    </div>
-    <div class="header-actions">
-      <div class="lang-switcher" id="langSwitcher">
-        <button class="lang-switcher-btn" id="langBtn"><span>English</span><span class="arrow">▾</span></button>
-        <div class="lang-dropdown" id="langDropdown" style="max-height:400px; overflow-y:auto;">
-          <div class="lang-option active" data-lang="en"><span class="native">English</span><span class="code">/en/</span></div>
-          <div class="lang-option" data-lang="hi"><span class="native">Hindi</span><span class="code">/hi/</span></div>
-          <div class="lang-option" data-lang="bn"><span class="native">Bengali</span><span class="code">/bn/</span></div>
-          <div class="lang-option" data-lang="te"><span class="native">Telugu</span><span class="code">/te/</span></div>
-          <div class="lang-option" data-lang="mr"><span class="native">Marathi</span><span class="code">/mr/</span></div>
-          <div class="lang-option" data-lang="ta"><span class="native">Tamil</span><span class="code">/ta/</span></div>
-          <div class="lang-option" data-lang="ur"><span class="native">Urdu</span><span class="code">/ur/</span></div>
-          <div class="lang-option" data-lang="gu"><span class="native">Gujarati</span><span class="code">/gu/</span></div>
-          <div class="lang-option" data-lang="kn"><span class="native">Kannada</span><span class="code">/kn/</span></div>
-          <div class="lang-option" data-lang="ml"><span class="native">Malayalam</span><span class="code">/ml/</span></div>
-          <div class="lang-option" data-lang="or"><span class="native">Odia</span><span class="code">/or/</span></div>
-          <div class="lang-option" data-lang="pa"><span class="native">Punjabi</span><span class="code">/pa/</span></div>
-          <div class="lang-option" data-lang="as"><span class="native">Assamese</span><span class="code">/as/</span></div>
-          <div class="lang-option" data-lang="mai"><span class="native">Maithili</span><span class="code">/mai/</span></div>
-          <div class="lang-option" data-lang="sat"><span class="native">Santali</span><span class="code">/sat/</span></div>
-          <div class="lang-option" data-lang="ks"><span class="native">Kashmiri</span><span class="code">/ks/</span></div>
-          <div class="lang-option" data-lang="ne"><span class="native">Nepali</span><span class="code">/ne/</span></div>
-          <div class="lang-option" data-lang="sd"><span class="native">Sindhi</span><span class="code">/sd/</span></div>
-          <div class="lang-option" data-lang="gom"><span class="native">Konkani</span><span class="code">/gom/</span></div>
-          <div class="lang-option" data-lang="doi"><span class="native">Dogri</span><span class="code">/doi/</span></div>
-          <div class="lang-option" data-lang="mni"><span class="native">Manipuri</span><span class="code">/mni/</span></div>
-          <div class="lang-option" data-lang="brx"><span class="native">Bodo</span><span class="code">/brx/</span></div>
-          <div class="lang-option" data-lang="sa"><span class="native">Sanskrit</span><span class="code">/sa/</span></div>
+    <!-- Top Bar -->
+    <section id="top" class="pt-2 pb-2 bg_light border-bottom">
+        <div class="container-xl">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <ul class="font_12 d-flex mb-0 fw-bold list-unstyled">
+                        <li><a class="col_orange" href="index.html">Home</a></li>
+                        <li class="ms-3 text-muted" id="headerDate">Loading...</li>
+                    </ul>
+                </div>
+                <div class="col-md-5">
+                    <div class="top_1_right text-end">
+                        <ul class="mb-0 d-flex justify-content-end list-unstyled social_brands">
+                            <li><a class="bg_orange d-inline-block text-white text-center" href="#"><i class="bi bi-facebook"></i></a></li>
+                            <li class="ms-1"><a class="bg-info d-inline-block text-white text-center" href="#"><i class="bi bi-twitter"></i></a></li>
+                            <li class="ms-1"><a class="bg-danger d-inline-block text-white text-center" href="#"><i class="bi bi-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <button class="header-btn" id="searchBtn" title="Search">🔍</button>
-      <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
-      <a href="admin.html" class="header-btn" title="Admin Panel" style="text-decoration:none;">⚙️</a>
-      <button class="hamburger" id="hamburgerBtn" title="Menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</header>
+    </section>
 
-<!-- Category Nav -->
-<nav class="category-nav" id="categoryNav">
-  <div class="category-nav-inner">
-    <a href="index.html" data-i18n="home">Home</a>
-    <a href="category.html?cat=politics" data-i18n="politics">Politics</a>
-    <a href="category.html?cat=business" data-i18n="business">Business</a>
-    <a href="category.html?cat=technology" data-i18n="technology">Technology</a>
-    <a href="category.html?cat=sports" data-i18n="sports">Sports</a>
-    <a href="category.html?cat=world" data-i18n="world">World</a>
-    <a href="category.html?cat=culture" data-i18n="culture">Culture</a>
-    <a href="category.html?cat=uttar-pradesh" data-i18n="uttar-pradesh">Uttar Pradesh</a>
-    <a href="category.html?cat=gorakhpur" data-i18n="gorakhpur">Gorakhpur</a>
-    <a href="category.html?cat=opinion" data-i18n="opinion">Opinion</a>
-  </div>
-</nav>
+    <!-- Top Head (Brand) -->
+    <section id="top_head" class="pt-3 pb-3">
+        <div class="container-xl">
+            <div class="row align-items-center">
+                <div class="col text-center">
+                    <a href="index.html" class="text-decoration-none">
+                        <b class="text-uppercase fs-1 lh-1 d-block brand-text">
+                            <i class="bi bi-newspaper me-1 col_orange"></i>
+                            NK <span class="col_orange">News</span>
+                        </b>
+                    </a>
+                    <span class="font_12 text-muted uppercase bold mt-2 d-block">India's AI-Powered Independent News Network</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- ARTICLE CONTENT -->
-<article class="article-page">
-  <div class="container" style="max-width:860px;">
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb" id="breadcrumb">
-      <a href="index.html">Home</a> / <a href="#" id="breadCat">Category</a> / <span id="breadTitle">Article</span>
-    </nav>
+    <!-- Navbar -->
+    <section id="header" class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg_orange w-100 p-0 shadow-sm">
+            <div class="container-xl">
+                <a class="navbar-brand d-lg-none py-2" href="index.html">NK NEWS</a>
+                <button class="navbar-toggler py-2" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link py-3 px-4" href="index.html"><i class="bi bi-house"></i></a></li>
+                        <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=politics">Politics</a></li>
+                        <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=business">Business</a></li>
+                        <li class="nav-item"><a class="nav-link py-3 px-3" href="category.html?cat=technology">Tech</a></li>
+                    </ul>
+                    <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+                        <button id="themeBtn" class="btn btn-outline-light border-0"><i class="bi bi-moon-stars"></i></button>
+                        <div class="dropdown" id="langSwitcher">
+                            <button id="langBtn" class="btn btn-dark btn-sm rounded px-3 dropdown-toggle" data-bs-toggle="dropdown">
+                                <span>English</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end shadow p-2" id="langDropdown">
+                                <!-- Options injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
 
-    <div id="articleContent">
-      <p style="text-align:center; padding:80px 0; color:var(--ink3);">Loading article...</p>
-    </div>
-  </div>
-</article>
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- ARTICLE CONTENT -->
+                    <div id="articleContent" class="article-detail">
+                        <!-- JS Fills -->
+                    </div>
+                </div>
 
-<!-- Related Articles -->
-<section style="padding-bottom: 48px;">
-  <div class="container" style="max-width:860px;">
-    <div class="section-header">
-      <h2 class="section-title"><span class="accent"></span><span data-i18n="more_in_category">More in this Category</span></h2>
-    </div>
-    <div class="news-grid" id="relatedArticles" style="grid-template-columns: repeat(3, 1fr);"></div>
-  </div>
-</section>
+                <!-- SIDEBAR -->
+                <div class="col-lg-4 mt-5 mt-lg-0">
+                    <div class="trend_1_right ps-lg-4">
+                        <h4 class="mb-4 border-bottom pb-2 font_16 uppercase bold">Trending Now</h4>
+                        <div id="trendingList">
+                             <!-- JS Fills -->
+                        </div>
+                        
+                        <div class="bg_light p-4 mt-5 rounded border_light">
+                            <h5 class="bold mb-3 uppercase font_14">Newsletter</h5>
+                            <p class="font_13 text-muted">Get the latest news in your inbox daily.</p>
+                            <div class="input-group">
+                                <input type="email" class="form-control font_13" placeholder="Email Address">
+                                <button class="btn btn-dark btn-sm">Join</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Footer (compact) -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-bottom">
-      <span>© 2026 NK News Media Pvt. Ltd. All rights reserved.</span>
-      <div>
-        <a href="index.html">Home</a>
-        <a href="admin.html">Admin</a>
-        <a href="grievance.html">Grievance</a>
-      </div>
-    </div>
-  </div>
-</footer>
+    <!-- More in Category -->
+    <section class="py-5 border-top bg_light">
+        <div class="container">
+            <h4 class="bold uppercase mb-4 border-bottom pb-2 font_18 design border_light px-3 py-2">Related Stories</h4>
+            <div class="row g-4" id="relatedArticles">
+                <!-- JS Fills -->
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer" class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <b class="text-uppercase fs-2 lh-1 d-block text-white mb-3">NK <span class="col_orange">NEWS</span></b>
+                    <p class="font_14 text-white-50">India's leading AI-powered news network, delivering real-time updates and in-depth analysis across 14+ languages.</p>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h4 class="font_14 bold uppercase text-white mb-3">Categories</h4>
+                    <ul class="list-unstyled font_14 text-white-50">
+                        <li><a href="category.html?cat=politics" class="text-white-50">Politics</a></li>
+                        <li><a href="category.html?cat=business" class="text-white-50">Business</a></li>
+                        <li><a href="category.html?cat=technology" class="text-white-50">Technology</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <span class="font_12 text-white-50">© 2026 NK News Media Pvt. Ltd. All rights reserved.</span>
+                <div class="mt-3 mt-md-0">
+                    <a href="grievance.html" class="font_12 text-white-50 ms-3">Grievance</a>
+                    <a href="#" class="font_12 text-white-50 ms-3">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 <script src="data.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Common: Date, Theme, Lang ──
-  const headerDate = document.getElementById('headerDate');
-  function updateDate() {
-    headerDate.textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZone:'Asia/Kolkata' }) + ' IST';
-  }
-  updateDate();
+    // ── Header Date ──
+    const headerDate = document.getElementById('headerDate');
+    function updateDateTime() {
+        if (!headerDate) return;
+        headerDate.textContent = new Date().toLocaleDateString('en-IN', {
+            weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZone:'Asia/Kolkata'
+        }) + ' IST';
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
 
-  // Theme
-  const themeBtn = document.getElementById('themeBtn');
-  if (localStorage.getItem('nk_theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeBtn.textContent = '☀️';
-  }
-  themeBtn.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.toggleAttribute('data-theme');
-    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('nk_theme','light'); themeBtn.textContent='🌙'; }
-    else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('nk_theme','dark'); themeBtn.textContent='☀️'; }
-  });
+    // ── Theme Logic ──
+    const themeBtn = document.getElementById('themeBtn');
+    if (localStorage.getItem('nk_theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '<i class="bi bi-sun"></i>';
+    }
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('nk_theme', 'light');
+            themeBtn.innerHTML = '<i class="bi bi-moon-stars"></i>';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('nk_theme', 'dark');
+            themeBtn.innerHTML = '<i class="bi bi-sun"></i>';
+        }
+    });
 
-  // React to data updates (silent sync)
-  document.addEventListener('nk-data-updated', () => {
+    // ── Language Switcher ──
+    const langDropdown = document.getElementById('langDropdown');
+    const langBtn = document.getElementById('langBtn');
+    const langs = [
+        {id:'en', n:'English'},
+        {id:'hi', n:'हिन्दी'},
+        {id:'ur', n:'اردو'},
+        {id:'bn', n:'বাংলা'}
+    ];
+    
+    langDropdown.innerHTML = langs.map(l => `
+        <div class="dropdown-item lang-option p-2 cursor-pointer" data-lang="${l.id}">
+            <span class="native">${l.n}</span>
+        </div>
+    `).join('');
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.addEventListener('click', async () => {
+            const code = opt.dataset.lang;
+            localStorage.setItem('nk_lang', code);
+            langBtn.querySelector('span').textContent = opt.querySelector('.native').textContent;
+            await NKData.translateMissingContent(code);
+            location.reload();
+        });
+    });
+
+    // Restore saved lang
+    const savedLang = localStorage.getItem('nk_lang');
+    if (savedLang) {
+        const opt = document.querySelector(`[data-lang="${savedLang}"]`);
+        if (opt) langBtn.querySelector('span').textContent = opt.querySelector('.native').textContent;
+    }
+
+    // ── Load Article ──
+    async function loadArticle() {
+        const id = new URLSearchParams(window.location.search).get('id');
+        if (!id) return;
+
+        NKData.init();
+        const article = NKData.getArticleById(id);
+        if (!article) return;
+
+        const currentLang = localStorage.getItem('nk_lang') || 'en';
+        if (currentLang !== 'en' && (!article.body || !article.body[currentLang])) {
+            await NKData.translateArticleById(id, currentLang);
+        }
+
+        const title = NKData.localText(article.title);
+        const body = NKData.localText(article.body);
+        const excerpt = NKData.localText(article.excerpt);
+
+        document.title = title + ' — NK News';
+
+        // Render Content
+        const contentBox = document.getElementById('articleContent');
+        contentBox.innerHTML = `
+            <div class="mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb font_12 uppercase bold">
+                        <li class="breadcrumb-item"><a href="index.html" class="col_orange">Home</a></li>
+                        <li class="breadcrumb-item"><a href="category.html?cat=${article.category}" class="col_orange">${NKData.t(article.category)}</a></li>
+                    </ol>
+                </nav>
+                <h1 class="family_1 bold mb-3" style="font-size: 3rem; line-height: 1.1;">${title}</h1>
+                <div class="d-flex align-items-center gap-3 font_12 text-muted uppercase bold mb-4 pb-4 border-bottom">
+                    <span class="bg_orange text-white px-2 py-1 rounded">By ${article.author}</span>
+                    <span><i class="bi bi-clock"></i> ${NKData.timeAgo(article.publishedAt)}</span>
+                    <span><i class="bi bi-book"></i> ${Math.ceil((body||'').length / 200)} min read</span>
+                </div>
+            </div>
+
+            <div class="rounded overflow-hidden mb-5 shadow-sm">
+                <img src="${article.images?.[0] || 'https://via.placeholder.com/1200x675'}" class="w-100" />
+            </div>
+
+            <div class="article-body font_16" style="line-height: 1.8;">
+                <p class="lead bold mb-4">${excerpt}</p>
+                <div>${body}</div>
+            </div>
+        `;
+
+        // Load Trending Sidebar
+        const trendingList = document.getElementById('trendingList');
+        const top = NKData.getArticles().sort((a,b) => (b.views||0) - (a.views||0)).slice(0, 5);
+        trendingList.innerHTML = top.map((a, i) => `
+            <div class="trend_2_inner mb-3 d-flex align-items-start gap-3 border-0 border-bottom pb-3 bg-transparent p-0">
+                <span class="font_20 bold col_orange family_1">${String(i+1).padStart(2,'0')}</span>
+                <div>
+                   <h6 class="font_13 bold mb-1"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
+                   <span class="font_10 text-muted uppercase bold">${NKData.timeAgo(a.publishedAt)}</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Related
+        const related = NKData.getArticlesByCategory(article.category).filter(a => a.id !== id).slice(0, 4);
+        document.getElementById('relatedArticles').innerHTML = related.map(a => `
+            <div class="col-lg-3 col-md-6">
+                <div class="trend_2_inner h-100 card border-0 p-0 shadow-sm overflow-hidden">
+                    <div style="height:140px; overflow:hidden;">
+                        <img src="${a.images?.[0] || 'https://via.placeholder.com/400x250'}" class="w-100 h-100 object-fit-cover transition" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="font_13 bold line-clamp-2"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     loadArticle();
-  });
-
-  // Language switcher
-  const langSwitcher = document.getElementById('langSwitcher');
-  const langBtn = document.getElementById('langBtn');
-  langBtn.addEventListener('click', (e) => { e.stopPropagation(); langSwitcher.classList.toggle('open'); });
-  document.addEventListener('click', () => langSwitcher.classList.remove('open'));
-
-  document.querySelectorAll('.lang-option').forEach(opt => {
-    opt.addEventListener('click', async () => {
-      const lang = opt.dataset.lang;
-      localStorage.setItem('nk_lang', lang);
-      document.cookie = `nk_lang=${lang}; max-age=31536000; path=/`;
-      if (lang === 'ur' || lang === 'ks') document.documentElement.setAttribute('dir','rtl');
-      else document.documentElement.removeAttribute('dir');
-      langBtn.querySelector('span:first-child').textContent = opt.querySelector('.native').textContent;
-      document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      langSwitcher.classList.remove('open');
-      
-      await NKData.translateMissingContent(lang);
-
-      loadArticle(); // Reload in new language
-      applyTranslations();
-    });
-  });
-
-  // Restore saved lang
-  const savedLang = localStorage.getItem('nk_lang');
-  if (savedLang) {
-    const opt = document.querySelector(`[data-lang="${savedLang}"]`);
-    if (opt) {
-      langBtn.querySelector('span:first-child').textContent = opt.querySelector('.native').textContent;
-      document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-    }
-  }
-
-  function applyTranslations() {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      el.textContent = NKData.t(el.dataset.i18n);
-    });
-  }
-
-  // ── Load Article ──
-  function loadArticle() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    if (!id) {
-      document.getElementById('articleContent').innerHTML = '<p style="text-align:center; padding:80px 0; color:var(--ink3);">Article not found. <a href="index.html">Go Home</a></p>';
-      return;
-    }
-
-    const article = NKData.getArticleById(id);
-    if (!article) {
-      document.getElementById('articleContent').innerHTML = '<p style="text-align:center; padding:80px 0; color:var(--ink3);">Article not found. <a href="index.html">Go Home</a></p>';
-      return;
-    }
-
-    // TRIGGER TRANSLATION IF MISSING
-    const currentLang = localStorage.getItem('nk_lang') || 'en';
-    if (currentLang !== 'en' && (!article.body || !article.body[currentLang])) {
-      NKData.translateArticleById(id, currentLang);
-    }
-
-    const cat = NKData.getCategoryInfo(article.category);
-    const title = NKData.localText(article.title);
-    const body = NKData.localText(article.body);
-    const excerpt = NKData.localText(article.excerpt);
-
-    document.title = title + ' — NK News';
-
-    // Breadcrumb
-    const breadCat = document.getElementById('breadCat');
-    const breadTitle = document.getElementById('breadTitle');
-    if(breadCat) { breadCat.textContent = NKData.t(article.category); breadCat.href = `category.html?cat=${article.category}`; }
-    if(breadTitle) { breadTitle.textContent = title.substring(0, 50) + '...'; }
-
-    // Highlight active nav
-    document.querySelectorAll('.category-nav a').forEach(a => {
-      a.classList.remove('active');
-      if (a.href.includes(`cat=${article.category}`)) a.classList.add('active');
-    });
-
-    const colorClass = NKData.getCatColorClass(article.category);
-    const typeMap = { article: '', video: '▶️ Video', photo_story: '📸 Photo Story', live: '🔴 Live', opinion: '✍️ Opinion' };
-    const contentTypeBadge = typeMap[article.contentType] ? `<span class="content-type-badge content-type-badge--${article.contentType}" style="margin-left:8px;">${typeMap[article.contentType]}</span>` : '';
-
-    const bgImage = article.images && article.images[0] ? `<img src="${article.images[0]}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;" />` : `<div class="hero-image-placeholder">Article Hero Image · ${cat.en}</div>`;
-
-    let galleryHtml = '';
-    if (article.images && article.images.length > 1) {
-      galleryHtml = `
-        <div class="story-gallery" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-top:32px;">
-          ${article.images.slice(1).map(src => `<img src="${src}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; border:1px solid var(--border);" />`).join('')}
-        </div>
-      `;
-    }
-
-    const contentBox = document.getElementById('articleContent');
-    if(contentBox) {
-      contentBox.innerHTML = `
-        <div class="hero-image" style="margin-bottom:24px; position:relative; overflow:hidden;">
-          ${bgImage}
-        </div>
-        <span class="cat-tag ${colorClass}">${NKData.t(article.category)}</span>
-        ${contentTypeBadge}
-        <h1 class="hero-headline" style="margin:16px 0 12px; font-size:36px;">${title}</h1>
-        <div class="hero-meta" style="margin-bottom:24px;">
-          <span class="author">${NKData.t('by')} ${article.author}</span>
-          <span class="dot"></span>
-          <span>${NKData.timeAgo(article.publishedAt)}</span>
-          <span class="dot"></span>
-          <span>${Math.ceil((body||'').length / 200)} ${NKData.t('min_read')}</span>
-          <span class="dot"></span>
-          <span>${(article.views || 0).toLocaleString()} ${NKData.t('views')}</span>
-        </div>
-        <div style="font-size:16px; line-height:1.8; color:var(--ink2);">
-          <p style="font-size:18px; font-weight:500; margin-bottom:16px; color:var(--ink);">${excerpt}</p>
-          <div>${body}</div>
-        </div>
-        ${galleryHtml}
-        ${article.tags && article.tags.length ? `<div class="analysis-tags" style="margin-top:32px;">${article.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-      `;
-    }
-
-    // Related articles
-    const related = NKData.getArticlesByCategory(article.category).filter(a => a.id !== id).slice(0, 3);
-    const relatedHtml = related.map(a => {
-      const t = NKData.localText(a.title);
-      const catInfo = NKData.getCategoryInfo(a.category);
-      const imgSrc = a.images && a.images[0] ? a.images[0] : '';
-      const imgHtml = imgSrc ? `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover;" />` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en}</div>`;
-      
-      return `
-        <article class="news-card">
-          <div class="news-card-image">${imgHtml}</div>
-          <div class="news-card-body">
-            <span class="cat-tag ${NKData.getCatColorClass(a.category)}" style="font-size:9px; padding:2px 6px;">${NKData.t(a.category)}</span>
-            <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${t}</a></h3>
-            <div class="news-card-meta"><span>${NKData.timeAgo(a.publishedAt)}</span><span>${(a.views||0).toLocaleString()} ${NKData.t('views')}</span></div>
-          </div>
-        </article>
-      `;
-    }).join('');
-    document.getElementById('relatedArticles').innerHTML = relatedHtml || '<p style="color:var(--ink3);">No related articles found.</p>';
-  }
+});
+</script>
 
   loadArticle();
   applyTranslations();

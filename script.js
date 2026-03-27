@@ -46,54 +46,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!heroMain || !heroSidebar) return;
 
     const articles = NKData.getArticles();
-    // Top story: first top_story or first article
     const topStory = articles.find(a => a.priority === 'top_story') || articles[0];
     const featured = articles.filter(a => a.priority === 'featured').slice(0, 3);
 
     if (topStory) {
       const cat = NKData.getCategoryInfo(topStory.category);
-      const bgImage = topStory.images && topStory.images[0] ? `<img src="${topStory.images[0]}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;" />` : `<div class="hero-image-placeholder">Article Hero Image · ${cat.en}</div>`;
+      const bgImage = topStory.images && topStory.images[0] ? topStory.images[0] : 'https://images.unsplash.com/photo-1504711331083-9c895941bf81?q=80&w=1000';
       
       heroMain.innerHTML = `
-        <div class="hero-image">
-          ${bgImage}
-        </div>
-        <div class="hero-content">
-          <span class="cat-tag">${NKData.t('top_story')}</span>
-          <h1 class="hero-headline"><a href="article.html?id=${topStory.id}" style="color:inherit; text-decoration:none;">${NKData.localText(topStory.title)}</a></h1>
-          <p class="hero-excerpt">${NKData.localText(topStory.excerpt)}</p>
-          <div class="hero-meta">
-            <span class="author">${NKData.t('by')} ${topStory.author}</span>
-            <span class="dot"></span>
-            <span>${NKData.timeAgo(topStory.publishedAt)}</span>
-            <span class="dot"></span>
-            <span>${Math.ceil((NKData.localText(topStory.body) || '').length / 200)} ${NKData.t('min_read')}</span>
+        <div class="trend_1_left position-relative carousel_p">
+          <div class="news_1_left2_inner border_light overflow-hidden position-relative">
+             <div class="news_1_left2_inner1">
+                <img src="${bgImage}" class="w-100" alt="${NKData.localText(topStory.title)}">
+             </div>
+             <div class="news_1_left2_inner2 position-absolute p-4 w-100 bg_back">
+                <h6 class="text-white bg_orange d-table px-3 py-1 mb-3 font_12 uppercase">${NKData.t(topStory.category)}</h6>
+                <h2 class="text-white mb-3 family_1"><a href="article.html?id=${topStory.id}" class="text-white">${NKData.localText(topStory.title)}</a></h2>
+                <p class="text-white-50 mb-0 font_14 line-clamp-2">${NKData.localText(topStory.excerpt)}</p>
+             </div>
           </div>
         </div>
       `;
     }
 
-    // Sidebar
-    const sidebarHTML = `
-      <div class="sidebar-label">${NKData.t('featured_stories')}</div>
-      ${featured.map(a => {
-        const cat = NKData.getCategoryInfo(a.category);
-        const colorClass = NKData.getCatColorClass(a.category);
-        const thumb = a.images && a.images[0] ? `<img src="${a.images[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />` : `<div style="background:var(--surface2);width:100%;height:100%;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:10px;">img</div>`;
-        return `
-          <article class="featured-card">
-            <div class="featured-thumb">${thumb}</div>
-            <div class="featured-info">
-              <span class="cat-tag ${colorClass}">${NKData.t(a.category)}</span>
-              <h3 class="featured-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${NKData.localText(a.title)}</a></h3>
-              <span class="featured-time">${NKData.timeAgo(a.publishedAt)}</span>
-            </div>
-          </article>
-        `;
-      }).join('')}
-      <div class="ad-slot">📢 ${NKData.t('ad_sidebar')}<div class="ad-slot-label">${NKData.t('ad_auto')}</div></div>
+    // Sidebar (Featured)
+    heroSidebar.innerHTML = `
+      <div class="trend_1_right">
+        <h4 class="mb-4 border-bottom pb-2 font_16 uppercase bold">${NKData.t('featured_stories')}</h4>
+        ${featured.map(a => `
+          <div class="trend_2_inner mb-3 d-flex align-items-center gap-3">
+             <div class="trend_2_inner_l w-25">
+                <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/150'}" class="w-100 rounded" alt="thumb">
+             </div>
+             <div class="trend_2_inner_r w-75">
+                <h6 class="font_13 line-clamp-2 bold mb-1"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
+                <span class="font_11 text-muted uppercase">${NKData.timeAgo(a.publishedAt)}</span>
+             </div>
+          </div>
+        `).join('')}
+      </div>
     `;
-    heroSidebar.innerHTML = sidebarHTML;
   }
 
   // ── CATEGORY SECTIONS ──
@@ -104,48 +96,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const cats = ['politics', 'business', 'technology', 'sports', 'world', 'culture'];
     
     container.innerHTML = cats.map(catId => {
-      const catInfo = NKData.getCategoryInfo(catId);
       const articles = NKData.getArticlesByCategory(catId).slice(0, 4);
       if (articles.length === 0) return '';
 
       const catName = NKData.t(catId);
-      const colorClass = NKData.getCatColorClass(catId);
-
-      const cards = articles.map(a => {
-        const typeMap = { video: 'content-type-badge--video', photo_story: 'content-type-badge--photo', live: 'content-type-badge--live', opinion: 'content-type-badge--opinion' };
-        const typeEmoji = { video: '▶️ Video', photo_story: '📸 Photo Story', live: '🔴 Live', opinion: '✍️ Opinion' };
-        
-        let badge = `<span class="cat-tag ${colorClass}" style="font-size:9px; padding:2px 6px;">${catName}</span>`;
-        if (typeMap[a.contentType]) {
-          badge = `<span class="content-type-badge ${typeMap[a.contentType]}">${typeEmoji[a.contentType]}</span>`;
-        }
-
-        const thumb = a.images && a.images[0] ? `<img src="${a.images[0]}" style="width:100%;height:100%;object-fit:cover;" />` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en} · Image</div>`;
-
-        return `
-          <article class="news-card">
-            <div class="news-card-image">${thumb}</div>
-            <div class="news-card-body">
-              ${badge}
-              <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${NKData.localText(a.title)}</a></h3>
-              <p class="news-card-excerpt">${(NKData.localText(a.excerpt) || '').replace(/<[^>]*>?/gm, '').substring(0, 160)}</p>
-              <div class="news-card-meta">
-                <span>${NKData.timeAgo(a.publishedAt)}</span>
-                <span>${(a.views||0).toLocaleString()} ${NKData.t('views')}</span>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join('');
 
       return `
-        <section id="${catId}">
+        <section class="py-5 border-top">
           <div class="container">
-            <div class="section-header">
-              <h2 class="section-title"><span class="accent"></span>${catName}</h2>
-              <a href="category.html?cat=${catId}" class="section-more">${NKData.t('view_all')}</a>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3 class="bold uppercase design border_light px-3 py-2 font_18">${catName}</h3>
+              <a href="category.html?cat=${catId}" class="col_orange bold font_13 uppercase">${NKData.t('view_all')} <i class="bi bi-arrow-right"></i></a>
             </div>
-            <div class="news-grid">${cards}</div>
+            <div class="row g-4">
+              ${articles.map(a => `
+                <div class="col-lg-3 col-md-6">
+                  <div class="trend_2_inner h-100">
+                    <div class="trend_2_inner_l mb-3 overflow-hidden" style="height:160px;">
+                      <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/400x250'}" class="w-100 h-100 object-fit-cover transition" alt="img">
+                    </div>
+                    <div class="trend_2_inner_r">
+                      <h5 class="font_14 bold line-clamp-3 mb-2"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h5>
+                      <div class="d-flex justify-content-between align-items-center font_11 text-muted">
+                        <span>${NKData.timeAgo(a.publishedAt)}</span>
+                        <span class="bg_light px-2 py-1 rounded">${(a.views||0).toLocaleString()} <i class="bi bi-eye"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </section>
       `;
@@ -158,28 +138,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const analysis = NKData.getArticles().find(a => a.isAnalysis);
-    if (!analysis) {
-      container.innerHTML = '<p style="color:var(--ink3);">No in-depth analysis available.</p>';
-      return;
-    }
+    if (!analysis) return;
     
-    const bgImage = analysis.images && analysis.images[0] ? `style="background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('${analysis.images[0]}'); background-size:cover; background-position:center;"` : '';
-
     container.innerHTML = `
-      <article class="deep-analysis" ${bgImage}>
-        <div class="analysis-header">
-          <span class="analysis-tag">IN-DEPTH</span>
-          <span class="analysis-meta-info">${Math.ceil((NKData.localText(analysis.body)||'').length/200)} ${NKData.t('min_read')} · Updated ${NKData.timeAgo(analysis.publishedAt)}</span>
+      <section class="py-5 bg_orange_dark text-white">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-7">
+               <h6 class="bg_orange d-table px-3 py-1 mb-3 font_12 uppercase bold">${NKData.t('in_depth')}</h6>
+               <h2 class="family_1 bold mb-4" style="font-size:3rem; line-height:1.1;">
+                 <a href="article.html?id=${analysis.id}" class="text-white">${NKData.localText(analysis.title)}</a>
+               </h2>
+               <p class="text-white-50 mb-5 font_16">${NKData.localText(analysis.excerpt)}</p>
+               <div class="row g-4">
+                  <div class="col-4">
+                    <h3 class="bold family_1 mb-0">${analysis.sources||5}</h3>
+                    <span class="font_11 uppercase text-white-50">Sources</span>
+                  </div>
+                  <div class="col-4">
+                    <h3 class="bold family_1 mb-0">${analysis.govDocs||12}</h3>
+                    <span class="font_11 uppercase text-white-50">Documents</span>
+                  </div>
+                  <div class="col-4">
+                    <h3 class="bold family_1 mb-0">${analysis.expertQuotes||8}</h3>
+                    <span class="font_11 uppercase text-white-50">Experts</span>
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-5 mt-4 mt-lg-0">
+               <div class="rounded overflow-hidden shadow-lg">
+                 <img src="${analysis.images ? analysis.images[0] : 'https://via.placeholder.com/600x400'}" class="w-100" alt="analysis">
+               </div>
+            </div>
+          </div>
         </div>
-        <h3 class="analysis-title"><a href="article.html?id=${analysis.id}" style="color:inherit; text-decoration:none;">${NKData.localText(analysis.title)}</a></h3>
-        <p class="analysis-desc">${NKData.localText(analysis.excerpt)}</p>
-        <div class="analysis-counters">
-          <div class="counter-box"><span class="counter-num">${analysis.sources||0}</span><span class="counter-label">Primary Sources</span></div>
-          <div class="counter-box"><span class="counter-num">${analysis.govDocs||0}</span><span class="counter-label">Govt Documents</span></div>
-          <div class="counter-box"><span class="counter-num">${analysis.expertQuotes||0}</span><span class="counter-label">Expert Quotes</span></div>
-        </div>
-        ${analysis.tags ? `<div class="analysis-tags">${analysis.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-      </article>
+      </section>
     `;
   }
 
@@ -190,11 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const top = NKData.getArticles().sort((a, b) => (b.views||0) - (a.views||0)).slice(0, 8);
     list.innerHTML = top.map((a, i) => `
-      <div class="trending-item">
-        <span class="trending-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="trend_2_inner mb-3 d-flex align-items-start gap-3 border-0 border-bottom pb-3 bg-transparent">
+        <span class="font_24 bold col_orange family_1" style="min-width:30px;">${String(i+1).padStart(2,'0')}</span>
         <div>
-          <div class="trending-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${NKData.localText(a.title)}</a></div>
-          <div class="trending-time">${NKData.timeAgo(a.publishedAt)}</div>
+          <h6 class="font_14 bold mb-1"><a href="article.html?id=${a.id}">${NKData.localText(a.title)}</a></h6>
+          <span class="font_11 text-muted uppercase">${NKData.timeAgo(a.publishedAt)}</span>
         </div>
       </div>
     `).join('');
@@ -206,42 +199,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const videos = NKData.getArticles().filter(a => a.contentType === 'video' || a.contentType === 'live');
-    
-    if (videos.length === 0) {
-      // Show placeholder videos
-      container.innerHTML = [1,2,3,4].map(i => `
-        <article class="video-card">
-          <div class="video-thumb">
-            <div class="hero-image-placeholder" style="height:100%; font-size:11px; background:linear-gradient(135deg,#1a1714,#2a2520); color:rgba(250,248,244,0.4);">Video ${i}</div>
-            <div class="video-duration">${10+i}:${20+i}</div>
-            <div class="video-play-btn">▶</div>
-          </div>
-          <div class="video-info">
-            <h3 class="video-title">Video content coming soon</h3>
-            <div class="video-meta">—</div>
-          </div>
-        </article>
-      `).join('');
-      return;
-    }
+    if (videos.length === 0) return;
 
-    container.innerHTML = videos.slice(0, 4).map(a => {
-      const isLive = a.contentType === 'live';
-      const thumb = a.images && a.images[0] ? `<img src="${a.images[0]}" style="width:100%;height:100%;object-fit:cover;" />` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px; background:linear-gradient(135deg,#1a1714,#2a2520); color:rgba(250,248,244,0.4);">Video</div>`;
-      return `
-        <article class="video-card">
-          <div class="video-thumb">
-            ${thumb}
-            ${isLive ? '<div class="video-live-badge"><span class="live-dot"></span> LIVE</div>' : '<div class="video-duration">12:34</div>'}
-            <div class="video-play-btn">▶</div>
+    container.innerHTML = videos.slice(0, 4).map(a => `
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="position-relative overflow-hidden rounded group" style="height:200px;">
+          <img src="${a.images && a.images[0] ? a.images[0] : 'https://via.placeholder.com/400x250'}" class="w-100 h-100 object-fit-cover" alt="video">
+          <div class="position-absolute top-0 start-0 w-100 h-100 bg_back d-flex flex-column justify-content-end p-3">
+             ${a.contentType === 'live' ? '<span class="bg-danger text-white px-2 py-1 rounded font_10 bold mb-2 d-table">LIVE</span>' : ''}
+             <h6 class="text-white font_13 bold mb-0"><a href="article.html?id=${a.id}" class="text-white">${NKData.localText(a.title)}</a></h6>
+             <div class="position-absolute top-50 start-50 translate-middle opacity-75 group-hover-opacity-100 transition">
+                <i class="bi bi-play-circle-fill text-white fs-1"></i>
+             </div>
           </div>
-          <div class="video-info">
-            <h3 class="video-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${NKData.localText(a.title)}</a></h3>
-            <div class="video-meta">${isLive ? '🔴 LIVE · ' + (a.views||0).toLocaleString() + ' ' + NKData.t('watching') : (a.views||0).toLocaleString() + ' ' + NKData.t('views') + ' · ' + NKData.timeAgo(a.publishedAt)}</div>
-          </div>
-        </article>
-      `;
-    }).join('');
+        </div>
+      </div>
+    `).join('');
   }
 
   // ═════════════════════════════════
@@ -424,18 +397,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; observer.unobserve(e.target); }
+        if (e.isIntersecting) { 
+          e.target.classList.add('animate-fade-up'); 
+          observer.unobserve(e.target); 
+        }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    // Observe after render
-    setTimeout(() => {
-      document.querySelectorAll('.news-card, .video-card, .featured-card, .deep-analysis').forEach(el => {
-        el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+    // Observe potential elements
+    const observeInitial = () => {
+      document.querySelectorAll('.news-card, .video-card, .featured-card, .deep-analysis, .trending-item').forEach(el => {
         observer.observe(el);
       });
-    }, 100);
+    };
+    setTimeout(observeInitial, 200);
   }
 
   // ═════════════════════════════════
