@@ -14,9 +14,10 @@ jobs:
         with:
           node-version: 18
       - name: Install Dependencies
-        run: npm install fast-xml-parser jsdom @mozilla/readability
+        run: npm install fast-xml-parser jsdom @mozilla/readability dotenv @google/generative-ai
       - name: Sync News to Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node worker.js

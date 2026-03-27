@@ -2,9 +2,34 @@ require('dotenv').config();
 const { XMLParser } = require('fast-xml-parser');
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+async function rewriteWithAI(title, body, targetLang = 'en') {
+    if (!process.env.GEMINI_API_KEY) return { title, body }; // Skip if no key
+    try {
+        const prompt = `You are a professional investigative journalist for NK News.
+        Rewrite the following news article to be completely ORIGINAL, engaging, and professional. 
+        Focus on facts but use a sophisticated, unique tone. 
+        Format: Output ONLY a JSON object with "title" and "body" (HTML allowed for body).
+        Target Language: ${targetLang === 'hi' ? 'Hindi' : 'English'}
+        
+        Original Title: ${title}
+        Original Content: ${body}`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text().replace(/```json|```/g, '').trim();
+        return JSON.parse(text);
+    } catch (e) {
+        console.error('AI Rewrite Error:', e.message);
+        return { title, body };
+    }
+}
 
 async function translateText(text, tl) {
   if (!text || !text.trim()) return text;
@@ -112,13 +137,6 @@ async function fetchCategoryFeeds() {
             console.log(`  -> Scrape failed:`, scrapeErr.message);
         }
         
-        // Translate to UI languages
-        const titleHi = await translateText(titleEn, 'hi');
-        const titleBn = await translateText(titleEn, 'bn');
-        const excerptEn = await translateText(decodedDesc, 'en');
-        const excerptHi = await translateText(decodedDesc, 'hi');
-        const excerptBn = await translateText(decodedDesc, 'bn');
-        
         const rawGuid = (typeof item.guid === 'object' ? item.guid['#text'] : item.guid) || item.link || item.title;
         const b64 = Buffer.from(String(rawGuid)).toString('base64').replace(/[^a-zA-Z0-9]/g, '');
         const id = 'art-' + (b64.substring(0, 15) + b64.substring(b64.length - 15));
@@ -145,23 +163,35 @@ async function fetchCategoryFeeds() {
             imgSrc = fallbacks[feed.category] || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80';
         }
 
-        const rawBody = `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>`;
-        const bodyEn = await translateHTML(rawBody, 'en');
-        const bodyHi = await translateHTML(rawBody, 'hi');
+        // --- AI REWRITE (Original Content Generation) ---
+        console.log(`  -> AI Rewriting: ${titleEn}`);
+        const aiEn = await rewriteWithAI(titleEn, fullHtmlBodyEn, 'en');
+        const aiHi = await rewriteWithAI(titleEn, fullHtmlBodyEn, 'hi');
 
         const article = {
           id,
-          title: { en: await translateText(titleEn, 'en'), hi: titleHi, bn: titleBn },
-          excerpt: { en: excerptEn, hi: excerptHi, bn: excerptBn },
-          body: { en: bodyEn, hi: bodyHi },
+          title: { 
+            en: aiEn.title || titleEn, 
+            hi: aiHi.title || await translateText(titleEn, 'hi'),
+            bn: await translateText(titleEn, 'bn')
+          },
+          excerpt: { 
+            en: (aiEn.body || '').replace(/<[^>]*>?/gm, '').substring(0, 160) + '...',
+            hi: (aiHi.body || '').replace(/<[^>]*>?/gm, '').substring(0, 160) + '...',
+            bn: await translateText(decodedDesc, 'bn')
+          },
+          body: { 
+            en: aiEn.body || fullHtmlBodyEn, 
+            hi: aiHi.body || await translateHTML(fullHtmlBodyEn, 'hi') 
+          },
           category: feed.category,
-          author: 'Auto News Matrix',
+          author: 'NK News AI Journalist',
           status: 'published',
           publishedAt,
           views: Math.floor(Math.random() * 500) + 50,
           contentType: 'article',
           images: [imgSrc],
-          tags: ['Global Sync']
+          tags: ['AI Generated', 'Premium']
         };
         
         await fetch(`${SUPABASE_URL}/rest/v1/articles`, {

@@ -19,7 +19,8 @@ const TRANSLATIONS = {
     mib_title: 'MIB Publisher Disclosure — IT Rules 2021', avail_languages: 'Available in 22 Languages',
     cookie_msg: "NK News uses cookies for essential functionality and analytics. We comply with India's Digital Personal Data Protection Act (DPDP) 2023.", cookie_privacy: 'Read our Privacy Policy', accept_all: 'Accept All', decline: 'Decline',
     search_placeholder: 'Search NK News...', admin_panel: 'Admin Panel', article: 'Article', video: 'Video', photo_story: 'Photo Story', live: 'Live', opinion_type: 'Opinion', views: 'views', watching: 'watching', live_now: 'LIVE NOW',
-    ad_sidebar: 'Ad Slot — Sidebar 300×250', ad_auto: 'Auto-injected from Ad Manager'
+    ad_sidebar: 'Ad Slot — Sidebar 300×250', ad_auto: 'Auto-injected from Ad Manager',
+    more_in_category: 'More in Category'
   },
   hi: { 
     politics: 'राजनीति', business: 'व्यापार', technology: 'तकनीक', sports: 'खेल', world: 'विश्व', culture: 'संस्कृति', 'uttar-pradesh': 'उत्तर प्रदेश', gorakhpur: 'गोरखपुर', opinion: 'विचार', videos: 'वीडियो',
@@ -31,7 +32,8 @@ const TRANSLATIONS = {
     mib_title: 'MIB प्रकटीकरण — IT नियम 2021', avail_languages: '22 भाषाओं में उपलब्ध',
     cookie_msg: 'NK News कुकीज़ का उपयोग करता है। हम DPDP अधिनियम 2023 का पालन करते हैं।', cookie_privacy: 'गोपनीयता नीति पढ़ें', accept_all: 'सभी स्वीकार करें', decline: 'अस्वीकार',
     search_placeholder: 'खोजें...', admin_panel: 'एडमिन', article: 'लेख', video: 'वीडियो', photo_story: 'फ़ोटो', live: 'लाइव', opinion_type: 'विचार', views: 'व्यूज', watching: 'देख रहे हैं', live_now: 'लाइव',
-    ad_sidebar: 'विज्ञापन', ad_auto: 'ऑटो-इंजेक्ट'
+    ad_sidebar: 'विज्ञापन', ad_auto: 'ऑटो-इंजेक्ट',
+    more_in_category: 'इस श्रेणी में और भी'
   },
   mr: { politics: 'राजकारण', business: 'व्यापार', technology: 'तंत्रज्ञान', sports: 'क्रीडा', world: 'जग', culture: 'संस्कृती', opinion: 'मत', videos: 'व्हिडिओ', featured_stories: 'प्रमुख बातम्या', top_story: 'मुख्य बातमी', in_depth: 'सखोल विश्लेषण', most_read: 'सर्वाधिक वाचलेले', breaking: 'ब्रेकिंग', by: 'लेखक', min_read: 'मिनिटांचे वाचन', views: 'दृश्ये', just_now: 'आत्ताच', subscribe: 'सबस्क्राईब करा' },
   sa: { politics: 'राजनीतिः', business: 'वाणिज्यम्', technology: 'तन्त्रज्ञानम्', sports: 'क्रीडा', world: 'विश्वम्', culture: 'संस्कृतिः', opinion: 'मतम्', videos: 'चित्रगृहीतिः', featured_stories: 'प्रमुखवार्ताः', top_story: 'मुख्यवार्ता', in_depth: 'गहनविश्लेषणम्', most_read: 'अधिकं पठितम्', breaking: 'ब्रेकिंग', by: 'लेखकः', min_read: 'पठनसमयः', views: 'दृष्टयः', just_now: 'इदानीमेव', subscribe: 'सदस्यत्वम्' },
