@@ -7,7 +7,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 async function translateText(text, tl) {
-  if (!text || !text.trim() || tl === 'en') return text;
+  if (!text || !text.trim()) return text;
   try {
     const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`);
     const data = await res.json();
@@ -18,7 +18,7 @@ async function translateText(text, tl) {
 }
 
 async function translateHTML(html, tl) {
-    if (!html || tl === 'en') return html;
+    if (!html) return html;
     try {
         const dom = new JSDOM(html);
         const { document } = dom.window;
@@ -145,8 +145,9 @@ async function fetchCategoryFeeds() {
             imgSrc = fallbacks[feed.category] || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80';
         }
 
-        const bodyEn = `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>`;
-        const bodyHi = await translateHTML(bodyEn, 'hi');
+        const rawBody = `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>`;
+        const bodyEn = await translateHTML(rawBody, 'en');
+        const bodyHi = await translateHTML(rawBody, 'hi');
 
         const article = {
           id,
