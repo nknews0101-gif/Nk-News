@@ -133,6 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
     else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('nk_theme','dark'); themeBtn.textContent='☀️'; }
   });
 
+  // React to data updates (silent sync)
+  document.addEventListener('nk-data-updated', () => {
+    loadArticle();
+  });
+
   // Language switcher
   const langSwitcher = document.getElementById('langSwitcher');
   const langBtn = document.getElementById('langBtn');
@@ -188,6 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!article) {
       document.getElementById('articleContent').innerHTML = '<p style="text-align:center; padding:80px 0; color:var(--ink3);">Article not found. <a href="index.html">Go Home</a></p>';
       return;
+    }
+
+    // TRIGGER TRANSLATION IF MISSING
+    const currentLang = localStorage.getItem('nk_lang') || 'en';
+    if (currentLang !== 'en' && (!article.body || !article.body[currentLang])) {
+      NKData.translateArticleById(id, currentLang);
     }
 
     const cat = NKData.getCategoryInfo(article.category);

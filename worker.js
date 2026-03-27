@@ -17,6 +17,31 @@ async function translateText(text, tl) {
   }
 }
 
+async function translateHTML(html, tl) {
+    if (!html || tl === 'en') return html;
+    try {
+        const dom = new JSDOM(html);
+        const { document } = dom.window;
+        const textNodes = [];
+        const walk = (node) => {
+            if (node.nodeType === 3 && node.nodeValue.trim()) textNodes.push(node);
+            for (let child of node.childNodes) walk(child);
+        };
+        walk(document.body);
+        
+        // Translate in chunks of 5 to avoid rate limits
+        for (let i = 0; i < textNodes.length; i += 5) {
+            const chunk = textNodes.slice(i, i + 5);
+            await Promise.all(chunk.map(async (n) => {
+                n.nodeValue = await translateText(n.nodeValue, tl);
+            }));
+        }
+        return document.body.innerHTML;
+    } catch (e) {
+        return html;
+    }
+}
+
 async function fetchCategoryFeeds() {
   console.log('Starting Multi-Source Global News sync...');
   const FEEDS = [
@@ -120,11 +145,14 @@ async function fetchCategoryFeeds() {
             imgSrc = fallbacks[feed.category] || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80';
         }
 
+        const bodyEn = `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>`;
+        const bodyHi = await translateHTML(bodyEn, 'hi');
+
         const article = {
           id,
           title: { en: await translateText(titleEn, 'en'), hi: titleHi, bn: titleBn },
           excerpt: { en: excerptEn, hi: excerptHi, bn: excerptBn },
-          body: { en: `${fullHtmlBodyEn}<br><p style="font-size:11px;color:#888;">Source: ${new URL(item.link).hostname.replace('news.google.com', 'Google News')}</p>` },
+          body: { en: bodyEn, hi: bodyHi },
           category: feed.category,
           author: 'Auto News Matrix',
           status: 'published',
@@ -135,7 +163,6 @@ async function fetchCategoryFeeds() {
           tags: ['Global Sync']
         };
         
-        // Parse Google News images if available or use placeholder pattern later
         await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
           method: 'POST',
           headers: { 

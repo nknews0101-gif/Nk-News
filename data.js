@@ -223,6 +223,34 @@ const NKData = {
     }
   },
 
+  async translateArticleById(id, targetLang) {
+    if (!targetLang || targetLang === 'en') return;
+    let articles = JSON.parse(localStorage.getItem('nk_articles') || '[]');
+    let a = articles.find(x => x.id === id);
+    if (!a) return;
+    
+    // If translation for targetLang is already present, skip
+    if (a.body && a.body[targetLang]) return;
+
+    // Show small loader or just proceed
+    let srcTitle = a.title.en || Object.values(a.title)[0] || '';
+    let srcExcerpt = a.excerpt.en || Object.values(a.excerpt)[0] || '';
+    let srcBody = a.body.en || Object.values(a.body)[0] || '';
+
+    const [tTitle, tExcerpt, tBody] = await Promise.all([
+      srcTitle && (!a.title[targetLang]) ? this.translateText(srcTitle, targetLang) : Promise.resolve(a.title[targetLang]),
+      srcExcerpt && (!a.excerpt[targetLang]) ? this.translateText(srcExcerpt, targetLang) : Promise.resolve(a.excerpt[targetLang]),
+      srcBody && (!a.body[targetLang]) ? this.translateHTML(srcBody, targetLang) : Promise.resolve(a.body[targetLang])
+    ]);
+
+    if (tTitle) a.title[targetLang] = tTitle;
+    if (tExcerpt) a.excerpt[targetLang] = tExcerpt;
+    if (tBody) a.body[targetLang] = tBody;
+
+    localStorage.setItem('nk_articles', JSON.stringify(articles));
+    document.dispatchEvent(new CustomEvent('nk-data-updated'));
+  },
+
   // Initialize localStorage with sample data if empty
   init() {
     if (!localStorage.getItem('nk_articles')) {
