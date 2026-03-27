@@ -74,12 +74,15 @@ const BREAKING_NEWS = {
 
 // ── CATEGORIES (Metadata) ──
 const CATEGORIES = [
-  { id: 'politics', color: 'red' },
-  { id: 'business', color: 'gold' },
-  { id: 'technology', color: 'teal' },
-  { id: 'sports', color: 'purple' },
-  { id: 'world', color: 'blue' },
-  { id: 'culture', color: 'purple' },
+  { id: 'politics', color: 'red', en: 'Politics' },
+  { id: 'business', color: 'gold', en: 'Business' },
+  { id: 'technology', color: 'teal', en: 'Technology' },
+  { id: 'sports', color: 'purple', en: 'Sports' },
+  { id: 'world', color: 'blue', en: 'World' },
+  { id: 'culture', color: 'purple', en: 'Culture' },
+  { id: 'uttar-pradesh', color: 'red', en: 'Uttar Pradesh' },
+  { id: 'gorakhpur', color: 'red', en: 'Gorakhpur' },
+  { id: 'opinion', color: 'teal', en: 'Opinion' },
 ];
 
 // ── DATA HELPERS ──
@@ -466,7 +469,7 @@ const NKData = {
 
   // Get category info
   getCategoryInfo(catId) {
-    return CATEGORIES.find(c => c.id === catId) || { id: catId, color: 'gray' };
+    return CATEGORIES.find(c => c.id === catId) || { id: catId, color: 'gray', en: catId.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ') };
   },
 
   // Get category color class
