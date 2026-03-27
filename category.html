@@ -48,7 +48,10 @@
           <div class="lang-option" data-lang="sa"><span class="native">Sanskrit</span><span class="code">/sa/</span></div>
         </div>
       </div>
+      <button class="header-btn" id="searchBtn" title="Search">🔍</button>
       <button class="header-btn" id="themeBtn" title="Toggle Dark Mode">🌙</button>
+      <a href="admin.html" class="header-btn" title="Admin Panel" style="text-decoration:none;">⚙️</a>
+      <button class="hamburger" id="hamburgerBtn" title="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
@@ -191,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <article class="news-card">
-          <div class="news-card-image"><div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en} · Image</div></div>
+          <div class="news-card-image">${a.images && a.images[0] ? `<img src="${a.images[0]}" alt="${title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="hero-image-placeholder" style="height:100%;font-size:11px;display:none;">${catInfo.en} · Image</div>` : `<div class="hero-image-placeholder" style="height:100%; font-size:11px;">${catInfo.en} · Image</div>`}</div>
           <div class="news-card-body">
             ${badge}
             <h3 class="news-card-title"><a href="article.html?id=${a.id}" style="color:inherit; text-decoration:none;">${title}</a></h3>
